@@ -10,7 +10,8 @@ import Home from "./pages/home.js";
 import Signup from "./pages/signup.js";
 import TermsAndConditions from "./pages/termsAndCondition.js";
 import ForgotPassword from "./pages/forgotPassword.js";
-import Footer from "./components/footer.js"
+import Footer from "./components/footer.js";
+
 
 function App() {
   const { user } = useAuthContext();
@@ -28,8 +29,9 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
           </Routes>
         </div>
-        <Footer className="bottom-0" />
+        
       </div>
+      <Footer />
     </Router>
   );
 }

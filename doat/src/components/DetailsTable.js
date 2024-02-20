@@ -81,12 +81,12 @@ const DetailsTable = () => {
   };
 
   return (
-    <div className="overflow-x-auto ">
+    <div className="overflow-x-auto  mt-20">
       <table className="w-full divide-y divide-gray-200">
         <thead className="bg-gray-300 ">
           <tr>
           <th
-              className="px-6 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              className="px-6 pr-8 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
               onClick={() => handleSort("EmployeeID")}
             >
               Employee ID
@@ -95,7 +95,7 @@ const DetailsTable = () => {
               )}
             </th>
             <th
-              className="px-6 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              className="px-6 py-3 text-left pr-40 text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
               onClick={() => handleSort("Name")}
             >
               Name
@@ -104,7 +104,7 @@ const DetailsTable = () => {
               )}
             </th>
             <th
-              className="px-6 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              className="px-6 py-3 pr-8 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
               onClick={() => handleSort("Designation")}
             >
               Designation

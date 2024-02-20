@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import DetailsTable from "../components/DetailsTable";
 import { useAuthContext } from "../hooks/useAuthContext";
-import background from '../images/logo.jpg'
+
 
 function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -193,9 +193,9 @@ function Home() {
       )}
       <div>
       <div className="">
-      <img src={background}></img>  
+      
       </div>
-      <div className="">
+      <div className="mt-8">
       <DetailsTable />
     </div>
     </div>
