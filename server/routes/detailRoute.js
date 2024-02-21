@@ -23,9 +23,6 @@ router.use(requireAuth);
 // GET all employees
 router.get("/", getDetails);
 
-// Route to download file
-router.get('/download', downloadFile);
-
 // GET a single employee
 router.get("/:id", getDetail);
 
@@ -37,10 +34,14 @@ router.delete("/:id", deleteDetail);
 
 router.patch("/updateInfo/:id", updateEmployeeBasicInfo);
 
-router.patch("/updateTraining/:id",uploadMiddleware.single("reportFile"), updateEmployeeTraining);
+router.patch("/updateTraining/:id", uploadMiddleware.single("reportFile"), updateEmployeeTraining);
 
 router.post("/addTraining/:id", uploadMiddleware.single("reportFile"), addEmployeeTraining);
 
 router.delete("/deleteTraining/:id", deleteEmployeeTraining);
+
+// Route to download file
+router.get("/download/:id", downloadFile);
+
 
 module.exports = router;
