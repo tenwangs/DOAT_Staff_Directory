@@ -10,26 +10,19 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     EndDate: "",
     Country: "",
     Funding: "",
-    reportFile: null, // Add reportFile state to handle file update
+    reportFile: null,
   });
   const [showAddTraining, setShowAddTraining] = useState(false);
+  const { user } = useAuthContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedTraining((prevTraining) => ({
-      ...prevTraining,
-      [name]: value,
-    }));
+    setEditedTraining((prevTraining) => ({ ...prevTraining, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    setEditedTraining({
-      ...editedTraining,
-      reportFile: e.target.files[0], // Update reportFile state with selected file
-    });
+    setEditedTraining({ ...editedTraining, reportFile: e.target.files[0] });
   };
-
-  const { user } = useAuthContext();
 
   const handleSave = async (employeeId, trainingId) => {
     try {
@@ -39,24 +32,20 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       formData.append("EndDate", editedTraining.EndDate);
       formData.append("Country", editedTraining.Country);
       formData.append("Funding", editedTraining.Funding);
-      formData.append("reportFile", editedTraining.reportFile); // Append the file to FormData
-
+      if (editedTraining.reportFile) {
+        formData.append("reportFile", editedTraining.reportFile);
+      }
       const response = await fetch(
-        `http://localhost:4000/api/details/updateTraining/${employeeId}`,
+        `http://localhost:4000/api/details/updateTraining/${employeeId}?trainingId=${trainingId}`,
         {
           method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
+          headers: { Authorization: `Bearer ${user.token}` },
           body: formData,
         }
       );
-
       if (!response.ok) {
         throw new Error("Failed to update training");
       }
-
-      // Assuming the PATCH request was successful
       setEditedTrainingIndex(null);
       setEditedTraining({
         Title: "",
@@ -68,7 +57,6 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       });
     } catch (error) {
       console.error("Error updating training:", error.message);
-      // Handle error gracefully, show an alert or error message to the user
     }
   };
 
@@ -82,7 +70,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       Funding: "",
       reportFile: null,
     });
-    setShowAddTraining(false); // Close the add training view
+    setShowAddTraining(false);
   };
 
   const toggleAddTraining = () => {
@@ -99,34 +87,46 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     return durationInDays;
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (employeeId, trainingId) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/details/download`, 
-      {
+      const queryString = new URLSearchParams({ trainingId }).toString();
+      const url = `http://localhost:4000/api/details/download/${employeeId}?${queryString}`;
+      const response = await fetch(url, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+      const contentDisposition = response.headers.get("Content-disposition");
+      let filename = "downloaded_file";
+      if (contentDisposition) {
+        const matches = contentDisposition.match(/filename="(.+)"/);
+        if (matches && matches.length > 1) {
+          filename = matches[1];
+          console.log("Filename:", filename);
         }
       }
-      );
-      if (!response.ok) {
-        throw new Error('Failed to download file');
-      }
+      console.log("Filename:", filename);
       const blob = await response.blob();
-      const disposition = response.headers.get('content-disposition');
-      const fileNameMatch = /filename="?(.+)"?;?/.exec(disposition);
-      const fileName = fileNameMatch ? fileNameMatch[1] : 'downloadedFile'; // Default file name if not found
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const downloadLink = document.createElement("a");
+      const objectUrl = URL.createObjectURL(blob);
+      downloadLink.href = objectUrl;
+      downloadLink.download = filename;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(objectUrl);
     } catch (error) {
-      console.error('Error downloading file:', error);
+      console.error("Error downloading file:", error);
     }
   };
+
+  function getFileNameAfterDoubleHyphen(filename) {
+    if (!filename) return 'unknown file'; 
+    const parts = filename.split('--');
+    return parts.length > 1 ? parts.slice(1).join('--') : filename;
+  }
   
 
   return (
@@ -221,11 +221,14 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
               </p>
               {training.reportFile && (
                 <p className="text-gray-700 mb-2">
-                  <strong>File:</strong>{" "}
-                  <button onClick={handleDownload}>Download File</button>
+                  <strong>Report File:</strong>
+                  {getFileNameAfterDoubleHyphen(training.reportFile)}
+                  <button
+                    onClick={() => handleDownload(detail._id, training._id)}>
+                     Download
+                  </button>
                 </p>
               )}
-              {console.log("Report File URL:", training.reportFile)};
               <div className="flex justify-end">
                 <button
                   onClick={() => handleDeleteTraining(training._id)}
@@ -242,7 +245,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                       EndDate: training.EndDate,
                       Country: training.Country,
                       Funding: training.Funding,
-                      reportFile: null, // Reset reportFile state when editing
+                      reportFile: null
                     });
                   }}
                   className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-200"
