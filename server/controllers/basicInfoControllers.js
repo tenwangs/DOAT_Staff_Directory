@@ -1,6 +1,7 @@
 const Detail = require("../models/detailModel");
 const mongoose = require("mongoose");
-const fs = require("fs").promises;
+const fs = require("fs");
+
 
 const createDetail = async (req, res) => {
   const { EmployeeId, Name, Designation, Division, Section } = req.body;
@@ -55,11 +56,17 @@ const deleteDetail = async (req, res) => {
     }
     if (detail.Trainings.length > 0) {
       await Promise.all(
-        detail.Trainings.forEach(async (training) => {
+        detail.Trainings.map(async (training) => {
           if (training.reportFile) {
-            const filePath = `./uploads/${training.reportFile}`;
-            if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
+            const filePath1 = `./uploads/${training.reportFile}`;
+            if (fs.existsSync(filePath1)) {
+              fs.unlinkSync(filePath1);
+            }
+          }
+          if (training.certificate) {
+            const filePath2 = `./uploads/${training.certificate}`;
+            if (fs.existsSync(filePath2)) {
+              fs.unlinkSync(filePath2);
             }
           }
         })

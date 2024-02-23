@@ -26,7 +26,7 @@ const getContentType = (filename) => {
 const downloadFile = async (req, res) => {
   try {
     const { id } = req.params;
-    const { trainingId } = req.query;
+    const { trainingId, file } = req.query;
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ error: "Invalid detail ID" });
     }
@@ -40,19 +40,19 @@ const downloadFile = async (req, res) => {
     const training = detail.Trainings.find(
       (t) => t._id.toString() === trainingId
     );
-    if (!training || !training.reportFile) {
+    if (!training || !training[file]) {
       return res.status(404).json({ error: "Training or file not found" });
     }
-    const filePath = path.join(__dirname, "..", "uploads", training.reportFile);
+    const filePath = path.join(__dirname, "..", "uploads", training[file]);
     fs.readFile(filePath, (err, fileContent) => {
       if (err) {
         console.error("Error reading file:", err);
         return res.status(500).json({ error: "Error reading file" });
       }
-      const contentType = getContentType(training.reportFile);
+      const contentType = getContentType(training[file]);
       res.setHeader(
         "Content-disposition",
-        `attachment; filename="${training.reportFile}"`
+        `attachment; filename="${training[file]}"`
       );
       res.setHeader("Content-type", contentType);
       res.send(fileContent);
@@ -69,7 +69,14 @@ const addEmployeeTraining = async (req, res) => {
       return res.status(400).json({ error: "Invalid employee ID" });
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
-    const reportFile = req.file;
+
+    if (!req.files || !req.files['reportFile'] || !req.files['certificate']) {
+      return res.status(400).json({ error: "Both reportFile and certificate are required" });
+    }
+    // const {reportFile, certificate} = req.file;
+    const reportFile = req.files['reportFile'][0];
+    const certificate = req.files['certificate'][0];
+
     const detail = await Detail.findById(id);
     if (!detail) {
       return res.status(404).json({ error: "Employee detail not found" });
@@ -81,6 +88,7 @@ const addEmployeeTraining = async (req, res) => {
       Country,
       Funding,
       reportFile: reportFile ? reportFile.filename : undefined,
+      certificate: certificate ? certificate.filename : undefined
     };
     detail.Trainings.push(newTraining);
     await detail.save();
@@ -102,7 +110,14 @@ const updateEmployeeTraining = async (req, res) => {
       return res.status(400).json({ error: "Invalid training ID" });
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
-    const reportFile = req.file;
+
+    if (!req.files || !req.files['reportFile'] || !req.files['certificate']) {
+      return res.status(400).json({ error: "Both reportFile and certificate are required" });
+    }
+
+    const reportFile = req.files['reportFile'][0];
+    const certificate = req.files['certificate'][0];
+
     const detail = await Detail.findById(id);
     if (!detail) {
       return res.status(404).json({ error: "Employee detail not found" });
@@ -112,9 +127,15 @@ const updateEmployeeTraining = async (req, res) => {
       return res.status(404).json({ error: "Training not found" });
     }
     if (reportFile && training.reportFile) {
-      const filePath = `./uploads/${training.reportFile}`;
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      const filePath1 = `./uploads/${training.reportFile}`;
+      if (fs.existsSync(filePath1)) {
+        fs.unlinkSync(filePath1);
+      }
+    }
+    if (certificate && training.certificate) {
+      const filePath2 = `./uploads/${training.certificate}`;
+      if (fs.existsSync(filePath2)) {
+        fs.unlinkSync(filePath2);
       }
     }
     if (Title) training.Title = Title;
@@ -123,6 +144,7 @@ const updateEmployeeTraining = async (req, res) => {
     if (Country) training.Country = Country;
     if (Funding) training.Funding = Funding;
     if (reportFile) training.reportFile = reportFile.filename;
+    if (certificate) training.certificate = certificate.filename;
     await detail.save();
     const updatedDetail = await Detail.findById(id);
     res.status(200).json(updatedDetail);
@@ -151,6 +173,12 @@ const deleteEmployeeTraining = async (req, res) => {
     }
     if (training.reportFile) {
       const filePath = `./uploads/${training.reportFile}`;
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+    if (training.certificate) {
+      const filePath = `./uploads/${training.certificate}`;
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }

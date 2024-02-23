@@ -25,6 +25,9 @@ const trainingSchema = new Schema({
   },
   reportFile: {
     type: String
+  },
+  certificate: {
+    type: String
   }
 });
 //schema defines the structure of the document

@@ -11,6 +11,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     Country: "",
     Funding: "",
     reportFile: null,
+    certificate: null
   });
   const [showAddTraining, setShowAddTraining] = useState(false);
   const { user } = useAuthContext();
@@ -21,8 +22,14 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
   };
 
   const handleFileChange = (e) => {
-    setEditedTraining({ ...editedTraining, reportFile: e.target.files[0] });
+    const file = e.target.files[0];
+    const name = e.target.name;
+    setEditedTraining((prevTraining) => ({
+      ...prevTraining,
+      [name]: file
+    }));
   };
+  
 
   const handleSave = async (employeeId, trainingId) => {
     try {
@@ -34,6 +41,9 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       formData.append("Funding", editedTraining.Funding);
       if (editedTraining.reportFile) {
         formData.append("reportFile", editedTraining.reportFile);
+      }
+      if (editedTraining.certificate) {
+        formData.append("certificate", editedTraining.certificate);
       }
       const response = await fetch(
         `http://localhost:4000/api/details/updateTraining/${employeeId}?trainingId=${trainingId}`,
@@ -54,6 +64,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
         Country: "",
         Funding: "",
         reportFile: null,
+        certificate: null
       });
     } catch (error) {
       console.error("Error updating training:", error.message);
@@ -69,6 +80,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       Country: "",
       Funding: "",
       reportFile: null,
+      certificate:null
     });
     setShowAddTraining(false);
   };
@@ -87,9 +99,9 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     return durationInDays;
   };
 
-  const handleDownload = async (employeeId, trainingId) => {
+  const handleDownload = async (employeeId, trainingId, file) => {
     try {
-      const queryString = new URLSearchParams({ trainingId }).toString();
+      const queryString = new URLSearchParams({ trainingId, file }).toString();
       const url = `http://localhost:4000/api/details/download/${employeeId}?${queryString}`;
       const response = await fetch(url, {
         method: "GET",
@@ -178,7 +190,16 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
               />
               <input
                 type="file"
+                name="reportFile"
                 onChange={handleFileChange}
+                placeholder="reportFile"
+                className="text-gray-800 mb-2 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
+              />
+              <input
+                type="file"
+                name="certificate"
+                onChange={handleFileChange}
+                placeholder="certificate"
                 className="text-gray-800 mb-2 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
               />
               <div className="flex justify-end">
@@ -224,7 +245,17 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   <strong>Report File:</strong>
                   {getFileNameAfterDoubleHyphen(training.reportFile)}
                   <button
-                    onClick={() => handleDownload(detail._id, training._id)}>
+                    onClick={() => handleDownload(detail._id, training._id, 'reportFile')}>
+                     Download
+                  </button>
+                </p>
+              )}
+              {training.certificate && (
+                <p className="text-gray-700 mb-2">
+                  <strong>Certificate:</strong>
+                  {getFileNameAfterDoubleHyphen(training.certificate)}
+                  <button
+                    onClick={() => handleDownload(detail._id, training._id, 'certificate')}>
                      Download
                   </button>
                 </p>
@@ -245,7 +276,8 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                       EndDate: training.EndDate,
                       Country: training.Country,
                       Funding: training.Funding,
-                      reportFile: null
+                      reportFile: null,
+                      certificate: null
                     });
                   }}
                   className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-200"
