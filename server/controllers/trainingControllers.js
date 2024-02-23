@@ -70,6 +70,10 @@ const addEmployeeTraining = async (req, res) => {
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
 
+    if (new Date(StartDate) >= new Date(EndDate)) {
+      return res.status(400).json({ error: "Start date must be before end date" });
+    }
+
     const reportFile = req.files['reportFile'] ? req.files['reportFile'][0] : undefined;
     const certificate = req.files['certificate'] ? req.files['certificate'][0] : undefined;
 
@@ -106,6 +110,10 @@ const updateEmployeeTraining = async (req, res) => {
       return res.status(400).json({ error: "Invalid training ID" });
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
+
+    if (StartDate && EndDate && new Date(StartDate) > new Date(EndDate)) {
+      return res.status(400).json({ error: "Start date must be before end date" });
+    }
 
     const reportFile = req.files['reportFile'] ? req.files['reportFile'][0] : undefined;
     const certificate = req.files['certificate'] ? req.files['certificate'][0] : undefined;

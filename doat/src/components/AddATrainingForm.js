@@ -35,6 +35,9 @@ const AddATrainingForm = ({ onCancel }) => {
 
   const handleSave = async () => {
     try {
+      if (newTraining.StartDate > newTraining.EndDate) {
+        throw new Error('Start date must be before end date');
+      }
       const formData = new FormData();
       formData.append("Title", newTraining.Title);
       formData.append("StartDate", newTraining.StartDate);

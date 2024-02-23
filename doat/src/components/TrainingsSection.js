@@ -11,7 +11,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     Country: "",
     Funding: "",
     reportFile: null,
-    certificate: null
+    certificate: null,
   });
   const [showAddTraining, setShowAddTraining] = useState(false);
   const { user } = useAuthContext();
@@ -26,13 +26,15 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     const name = e.target.name;
     setEditedTraining((prevTraining) => ({
       ...prevTraining,
-      [name]: file
+      [name]: file,
     }));
   };
-  
 
   const handleSave = async (employeeId, trainingId) => {
     try {
+      if (editedTraining.StartDate > editedTraining.EndDate) {
+        throw new Error("Start date must be before end date");
+      }
       const formData = new FormData();
       formData.append("Title", editedTraining.Title);
       formData.append("StartDate", editedTraining.StartDate);
@@ -64,7 +66,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
         Country: "",
         Funding: "",
         reportFile: null,
-        certificate: null
+        certificate: null,
       });
     } catch (error) {
       console.error("Error updating training:", error.message);
@@ -80,7 +82,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       Country: "",
       Funding: "",
       reportFile: null,
-      certificate:null
+      certificate: null,
     });
     setShowAddTraining(false);
   };
@@ -93,9 +95,8 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const durationInMilliseconds = end - start;
-    const durationInDays = Math.ceil(
-      durationInMilliseconds / (1000 * 60 * 60 * 24)
-    );
+    const durationInDays =
+      1 + Math.ceil(durationInMilliseconds / (1000 * 60 * 60 * 24));
     return durationInDays;
   };
 
@@ -135,12 +136,21 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
   };
 
   function getFileNameAfterDoubleHyphen(filename) {
-    if (!filename) return 'unknown file'; 
-    const parts = filename.split('--');
-    return parts.length > 1 ? parts.slice(1).join('--') : filename;
+    if (!filename) return "unknown file";
+    const parts = filename.split("--");
+    return parts.length > 1 ? parts.slice(1).join("--") : filename;
   }
-  
 
+  const renderDurationText = (days) => {
+    return days === 1 ? "day" : "days";
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+    
   return (
     <div className="mb-8">
       <h3 className="text-lg font-semibold text-gray-800 mb-2">Trainings</h3>
@@ -225,10 +235,17 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                 <strong>Title:</strong> {training.Title}
               </p>
               <p className="text-gray-700 mb-2">
-                <strong>Start Date:</strong> {training.StartDate}
+                <strong>Start Date:</strong> {formatDate(training.StartDate)}
               </p>
               <p className="text-gray-700 mb-2">
-                <strong>End Date:</strong> {training.EndDate}
+                <strong>End Date:</strong> {formatDate(training.EndDate)}
+              </p>
+              <p className="text-gray-700 mb-2">
+                <strong>Duration:</strong>{" "}
+                {calculateDuration(training.StartDate, training.EndDate)}{" "}
+                {renderDurationText(
+                  calculateDuration(training.StartDate, training.EndDate)
+                )}
               </p>
               <p className="text-gray-700 mb-2">
                 <strong>Country:</strong> {training.Country}
@@ -236,17 +253,16 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
               <p className="text-gray-700 mb-2">
                 <strong>Funding:</strong> {training.Funding}
               </p>
-              <p className="text-gray-700 mb-2">
-                <strong>Duration:</strong>{" "}
-                {calculateDuration(training.StartDate, training.EndDate)} days
-              </p>
               {training.reportFile && (
                 <p className="text-gray-700 mb-2">
                   <strong>Report File:</strong>
                   {getFileNameAfterDoubleHyphen(training.reportFile)}
                   <button
-                    onClick={() => handleDownload(detail._id, training._id, 'reportFile')}>
-                     Download
+                    onClick={() =>
+                      handleDownload(detail._id, training._id, "reportFile")
+                    }
+                  >
+                    Download
                   </button>
                 </p>
               )}
@@ -255,8 +271,11 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   <strong>Certificate:</strong>
                   {getFileNameAfterDoubleHyphen(training.certificate)}
                   <button
-                    onClick={() => handleDownload(detail._id, training._id, 'certificate')}>
-                     Download
+                    onClick={() =>
+                      handleDownload(detail._id, training._id, "certificate")
+                    }
+                  >
+                    Download
                   </button>
                 </p>
               )}
@@ -277,7 +296,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                       Country: training.Country,
                       Funding: training.Funding,
                       reportFile: null,
-                      certificate: null
+                      certificate: null,
                     });
                   }}
                   className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-200"
