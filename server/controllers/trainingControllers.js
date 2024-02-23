@@ -70,12 +70,8 @@ const addEmployeeTraining = async (req, res) => {
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
 
-    if (!req.files || !req.files['reportFile'] || !req.files['certificate']) {
-      return res.status(400).json({ error: "Both reportFile and certificate are required" });
-    }
-    // const {reportFile, certificate} = req.file;
-    const reportFile = req.files['reportFile'][0];
-    const certificate = req.files['certificate'][0];
+    const reportFile = req.files['reportFile'] ? req.files['reportFile'][0] : undefined;
+    const certificate = req.files['certificate'] ? req.files['certificate'][0] : undefined;
 
     const detail = await Detail.findById(id);
     if (!detail) {
@@ -111,12 +107,8 @@ const updateEmployeeTraining = async (req, res) => {
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
 
-    if (!req.files || !req.files['reportFile'] || !req.files['certificate']) {
-      return res.status(400).json({ error: "Both reportFile and certificate are required" });
-    }
-
-    const reportFile = req.files['reportFile'][0];
-    const certificate = req.files['certificate'][0];
+    const reportFile = req.files['reportFile'] ? req.files['reportFile'][0] : undefined;
+    const certificate = req.files['certificate'] ? req.files['certificate'][0] : undefined;
 
     const detail = await Detail.findById(id);
     if (!detail) {

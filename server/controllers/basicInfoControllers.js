@@ -6,6 +6,11 @@ const fs = require("fs");
 const createDetail = async (req, res) => {
   const { EmployeeId, Name, Designation, Division, Section } = req.body;
   try {
+    const existingDetail = await Detail.findOne({ EmployeeId });
+    if (existingDetail) {
+      return res.status(400).json({ error: "EmployeeId already exists" });
+    }
+
     const detail = await Detail.create({
       EmployeeId,
       Name,
@@ -80,11 +85,11 @@ const deleteDetail = async (req, res) => {
 };
 
 const updateEmployeeBasicInfo = async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such employee" });
-  }
   try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "No such employee" });
+    }
     const detail = await Detail.findByIdAndUpdate(id, req.body, { new: true });
     if (!detail) {
       return res.status(400).json({ error: "No such detail" });

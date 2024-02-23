@@ -88,14 +88,22 @@ function Home() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error);
+        if (
+          response.status === 400 &&
+          errorData.error === "EmployeeId already exists"
+        ) {
+          alert("Employee with this ID already exists!");
+        } else {
+          throw new Error(errorData.error);
+        }
+      } else {
+        setEmployeeId("");
+        setName("");
+        setDesignation(null);
+        setDivision(null);
+        setSection(null);
+        console.log("Employee detail added successfully");
       }
-      setEmployeeId("");
-      setName("");
-      setDesignation(null);
-      setDivision(null);
-      setSection(null);
-      console.log("Employee detail added successfully");
     } catch (error) {
       console.error("Error adding employee detail:", error.message);
     }
