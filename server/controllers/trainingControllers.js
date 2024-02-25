@@ -50,10 +50,6 @@ const downloadFile = async (req, res) => {
         return res.status(500).json({ error: "Error reading file" });
       }
       const contentType = getContentType(training[file]);
-      res.setHeader(
-        "Content-disposition",
-        `attachment; filename="${training[file]}"`
-      );
       res.setHeader("Content-type", contentType);
       res.send(fileContent);
     });
@@ -70,7 +66,7 @@ const addEmployeeTraining = async (req, res) => {
     }
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
 
-    if (new Date(StartDate) >= new Date(EndDate)) {
+    if (new Date(StartDate) > new Date(EndDate)) {
       return res.status(400).json({ error: "Start date must be before end date" });
     }
 

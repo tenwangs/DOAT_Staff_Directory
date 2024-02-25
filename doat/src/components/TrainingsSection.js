@@ -100,7 +100,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     return durationInDays;
   };
 
-  const handleDownload = async (employeeId, trainingId, file) => {
+  const handleDownload = async (employeeId, trainingId, file, name) => {
     try {
       const queryString = new URLSearchParams({ trainingId, file }).toString();
       const url = `http://localhost:4000/api/details/download/${employeeId}?${queryString}`;
@@ -111,15 +111,8 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
       if (!response.ok) {
         throw new Error("Failed to download file");
       }
-      const contentDisposition = response.headers.get("Content-disposition");
-      let filename = "downloaded_file";
-      if (contentDisposition) {
-        const matches = contentDisposition.match(/filename="(.+)"/);
-        if (matches && matches.length > 1) {
-          filename = matches[1];
-          console.log("Filename:", filename);
-        }
-      }
+      let filename = getFileNameAfterDoubleHyphen(name);
+     
       console.log("Filename:", filename);
       const blob = await response.blob();
       const downloadLink = document.createElement("a");
@@ -259,7 +252,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   {getFileNameAfterDoubleHyphen(training.reportFile)}
                   <button
                     onClick={() =>
-                      handleDownload(detail._id, training._id, "reportFile")
+                      handleDownload(detail._id, training._id, "reportFile", training.reportFile)
                     }
                   >
                     Download
@@ -272,7 +265,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   {getFileNameAfterDoubleHyphen(training.certificate)}
                   <button
                     onClick={() =>
-                      handleDownload(detail._id, training._id, "certificate")
+                      handleDownload(detail._id, training._id, "certificate", training.certificate)
                     }
                   >
                     Download
