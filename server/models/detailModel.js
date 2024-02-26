@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-//sub-schema for training record
 const trainingSchema = new Schema({
   Title: {
     type: String,
@@ -21,16 +20,16 @@ const trainingSchema = new Schema({
     required: true,
   },
   Funding: {
-    type: String
+    type: String,
   },
   reportFile: {
-    type: String
+    type: String,
   },
   certificate: {
-    type: String
-  }
+    type: String,
+  },
 });
-//schema defines the structure of the document
+
 const detailSchema = new Schema(
   {
     EmployeeId: {
@@ -60,8 +59,5 @@ const detailSchema = new Schema(
   },
   { timestamps: true }
 );
-
-//make Training field optional
-// detailSchema.path("Trainings").required(false);
 
 module.exports = mongoose.model("Detail", detailSchema);

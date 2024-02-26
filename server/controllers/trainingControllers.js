@@ -67,11 +67,17 @@ const addEmployeeTraining = async (req, res) => {
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
 
     if (new Date(StartDate) > new Date(EndDate)) {
-      return res.status(400).json({ error: "Start date must be before end date" });
+      return res
+        .status(400)
+        .json({ error: "Start date must be before end date" });
     }
 
-    const reportFile = req.files['reportFile'] ? req.files['reportFile'][0] : undefined;
-    const certificate = req.files['certificate'] ? req.files['certificate'][0] : undefined;
+    const reportFile = req.files["reportFile"]
+      ? req.files["reportFile"][0]
+      : undefined;
+    const certificate = req.files["certificate"]
+      ? req.files["certificate"][0]
+      : undefined;
 
     const detail = await Detail.findById(id);
     if (!detail) {
@@ -84,7 +90,7 @@ const addEmployeeTraining = async (req, res) => {
       Country,
       Funding,
       reportFile: reportFile ? reportFile.filename : undefined,
-      certificate: certificate ? certificate.filename : undefined
+      certificate: certificate ? certificate.filename : undefined,
     };
     detail.Trainings.push(newTraining);
     await detail.save();
@@ -108,11 +114,17 @@ const updateEmployeeTraining = async (req, res) => {
     const { Title, StartDate, EndDate, Country, Funding } = req.body;
 
     if (StartDate && EndDate && new Date(StartDate) > new Date(EndDate)) {
-      return res.status(400).json({ error: "Start date must be before end date" });
+      return res
+        .status(400)
+        .json({ error: "Start date must be before end date" });
     }
 
-    const reportFile = req.files['reportFile'] ? req.files['reportFile'][0] : undefined;
-    const certificate = req.files['certificate'] ? req.files['certificate'][0] : undefined;
+    const reportFile = req.files["reportFile"]
+      ? req.files["reportFile"][0]
+      : undefined;
+    const certificate = req.files["certificate"]
+      ? req.files["certificate"][0]
+      : undefined;
 
     const detail = await Detail.findById(id);
     if (!detail) {

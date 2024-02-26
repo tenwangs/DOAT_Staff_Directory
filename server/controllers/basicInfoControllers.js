@@ -2,7 +2,6 @@ const Detail = require("../models/detailModel");
 const mongoose = require("mongoose");
 const fs = require("fs");
 
-
 const createDetail = async (req, res) => {
   const { EmployeeId, Name, Designation, Division, Section } = req.body;
   try {
@@ -10,7 +9,6 @@ const createDetail = async (req, res) => {
     if (existingDetail) {
       return res.status(400).json({ error: "EmployeeId already exists" });
     }
-
     const detail = await Detail.create({
       EmployeeId,
       Name,

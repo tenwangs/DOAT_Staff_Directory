@@ -1,51 +1,33 @@
-const User = require('../models/userModel')
+const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 var nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
 
-
-
-
-
-  
 const createToken = (_id) => {
-  return jwt.sign({_id}, process.env.SECRET, { expiresIn: '3d' })
-}
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
+};
 
-// login a user
 const loginUser = async (req, res) => {
-  const {email, password} = req.body
-
+  const { email, password } = req.body;
   try {
-    const user = await User.login(email, password)
-
-    // create a token
-    const token = createToken(user._id)
-
-    res.status(200).json({email, token})
+    const user = await User.login(email, password);
+    const token = createToken(user._id);
+    res.status(200).json({ email, token });
   } catch (error) {
-    res.status(400).json({error: error.message})
+    res.status(400).json({ error: error.message });
   }
-}
+};
 
-// signup a user
 const signupUser = async (req, res) => {
-  const {email, password} = req.body
-
+  const { email, password } = req.body;
   try {
-    const oldUser = await User.signup(email, password)
-
-    // create a token
-    const token = createToken(oldUser._id)
-
-    res.status(200).json({email, token})
+    const oldUser = await User.signup(email, password);
+    const token = createToken(oldUser._id);
+    res.status(200).json({ email, token });
   } catch (error) {
-    res.status(400).json({error: error.message})
+    res.status(400).json({ error: error.message });
   }
-}
-
-
-
+};
 
 const resetPassword = async (req, res) => {
   const { email } = req.body;
@@ -66,14 +48,12 @@ const resetPassword = async (req, res) => {
         pass: "yseh ybga bygl errw",
       },
     });
-
     var mailOptions = {
       from: "tenzin22wangchuk22@gmail.com",
       to: email,
       subject: "Password Reset",
       text: `To reset your password, click this link: ${link}`,
     };
-
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
@@ -82,12 +62,11 @@ const resetPassword = async (req, res) => {
       }
     });
     console.log(link);
-  } catch (error) { }
+  } catch (error) {}
 };
 
 const passwordTokenVerification = async (req, res) => {
   const { id, token } = req.params;
-  
   console.log(req.params);
   const oldUser = await User.findOne({ _id: id });
   if (!oldUser) {
@@ -95,10 +74,8 @@ const passwordTokenVerification = async (req, res) => {
   }
   const secret = process.env.SECRET + oldUser.password;
   try {
-    const verify = jwt.verify(token, secret); 
-    // redirect to forgotpassword page in frontend with email, id and token
+    const verify = jwt.verify(token, secret);
     res.render("index", { email: verify.email, status: "Not Verified" });
-    
   } catch (error) {
     console.log(error);
     res.send("Not Verified");
@@ -107,13 +84,12 @@ const passwordTokenVerification = async (req, res) => {
 
 const passwordHashed = async (req, res) => {
   const { id, token } = req.params;
-   const { password} = req.body;
-  const oldUser = await User.findOne({ _id: id});
+  const { password } = req.body;
+  const oldUser = await User.findOne({ _id: id });
   if (!oldUser) {
-    return res.json({ status: "Usersx Not Exists!!" });
+    return res.json({ status: "Users Not Exists!!" });
   }
   const secret = process.env.SECRET + oldUser.password;
-  
   try {
     const verify = jwt.verify(token, secret);
     const encryptedPassword = await bcrypt.hash(password, 10);
@@ -127,7 +103,6 @@ const passwordHashed = async (req, res) => {
         },
       }
     );
-
     res.render("index", { email: verify.email, status: "verified" });
   } catch (error) {
     console.log(error);
@@ -135,4 +110,10 @@ const passwordHashed = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, resetPassword, passwordTokenVerification, passwordHashed}
+module.exports = {
+  signupUser,
+  loginUser,
+  resetPassword,
+  passwordTokenVerification,
+  passwordHashed,
+};
