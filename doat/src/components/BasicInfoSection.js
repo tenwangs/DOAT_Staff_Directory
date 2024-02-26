@@ -60,6 +60,7 @@ const BasicInfoSection = ({ detail }) => {
               name="EmployeeId"
               value={editedDetail.EmployeeId}
               onChange={handleInputChange}
+              disabled
               className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
             />
           </div>

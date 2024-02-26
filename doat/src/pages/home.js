@@ -3,7 +3,6 @@ import Select from "react-select";
 import DetailsTable from "../components/DetailsTable";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-
 function Home() {
   const [showModal, setShowModal] = useState(false);
   const [employeeId, setEmployeeId] = useState("");
@@ -11,33 +10,45 @@ function Home() {
   const [designation, setDesignation] = useState(null);
   const [division, setDivision] = useState(null);
   const [section, setSection] = useState(null);
-  const {user} = useAuthContext()
-
+  const { user } = useAuthContext();
 
   const designations = [
     { value: "Manager", label: "Manager" },
     { value: "Executive", label: "Executive" },
-    // Add more designations here
   ];
 
   const divisions = [
     { value: "Air Navigation Service", label: "Air Navigation Service" },
     { value: "Airport Management", label: "Airport Management" },
-    { value: "Airport Emergency and Security", label: "Airport Emergency and Security" },
-    { value: "Aerodrome Planning and Maintenance", label: "Aerodrome Planning and Maintenance" }
-    // Add more departments here
+    {
+      value: "Airport Emergency and Security",
+      label: "Airport Emergency and Security",
+    },
+    {
+      value: "Aerodrome Planning and Maintenance",
+      label: "Aerodrome Planning and Maintenance",
+    },
   ];
 
   const sections = [
-    {value:"Air Traffic Control",label:"Air Traffic Control"},
-    {value:"CNS",label:"CNS"},
-    {value:"Aviation Security",label:"Aviation Security"},
-    {value:"Airport Emergency",label:"Airport Emergency"},
-    {value:"Bumthang Airport Management",label:"Bumthang Airport Management"},
-    {value:"Yonphula Airport Management",label:"Yonphula Airport Management"},
-    {value:"Gelephu Airport Management",label:"Gelephu Airport Management"},
-    {value:"Paro Airport Management",label:"Paro Airport Management"}
-  ]
+    { value: "Air Traffic Control", label: "Air Traffic Control" },
+    { value: "CNS", label: "CNS" },
+    { value: "Aviation Security", label: "Aviation Security" },
+    { value: "Airport Emergency", label: "Airport Emergency" },
+    {
+      value: "Bumthang Airport Management",
+      label: "Bumthang Airport Management",
+    },
+    {
+      value: "Yonphula Airport Management",
+      label: "Yonphula Airport Management",
+    },
+    {
+      value: "Gelephu Airport Management",
+      label: "Gelephu Airport Management",
+    },
+    { value: "Paro Airport Management", label: "Paro Airport Management" },
+  ];
 
   const customStyles = {
     menuList: (provided, state) => ({
@@ -58,63 +69,58 @@ function Home() {
   const handleSave = async (e) => {
     e.preventDefault();
     console.log("form triggered");
-    // Prepare data to be sent to the backend
     const data = {
       EmployeeId: employeeId,
       Name: name,
-      Designation: designation ? designation.value : "", // Assuming designation is an object with a value property
-      Division: division ? division.value : "", // Assuming department is an object with a value property
-      Section: section ? section.value : ""
+      Designation: designation ? designation.value : "",
+      Division: division ? division.value : "",
+      Section: section ? section.value : "",
     };
 
     try {
-      // Send a POST request to the backend to add basic employee detail
       const response = await fetch("http://localhost:4000/api/details", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${user.token}`
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(data),
       });
-
       if (!response.ok) {
-        // Handle error response
         const errorData = await response.json();
-        throw new Error(errorData.error);
+        if (
+          response.status === 400 &&
+          errorData.error === "EmployeeId already exists"
+        ) {
+          alert("Employee with this ID already exists!");
+        } else {
+          throw new Error(errorData.error);
+        }
+      } else {
+        setEmployeeId("");
+        setName("");
+        setDesignation(null);
+        setDivision(null);
+        setSection(null);
+        console.log("Employee detail added successfully");
       }
-
-      // Clear form fields after successful save
-      setEmployeeId("");
-      setName("");
-      setDesignation(null);
-      setDivision(null);
-      setSection(null)
-
-      // Handle success response
-      console.log("Employee detail added successfully");
     } catch (error) {
       console.error("Error adding employee detail:", error.message);
     }
   };
 
   return (
-<div className="flex flex-col items-center justify-start h-screen p-4 space-y-4">
-    <div className="pt-4">
-      {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&( 
- <button
-    
-    className="bg-blue-500 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
-    onClick={() => setShowModal(true)}
-    >
-   Add Employee
-</button>
-)}
-</div>
-
+    <div className="flex flex-col items-center justify-start h-screen p-4 space-y-4">
+      <div className="pt-4">
+        <button
+          className="bg-blue-500 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
+          onClick={() => setShowModal(true)}
+        >
+          Add Employee
+        </button>
+      </div>
       {showModal && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center ">
-                
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
 
           <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl max-w-md w-full p-8">
@@ -194,17 +200,12 @@ function Home() {
         </div>
       )}
       <div>
-      <div className="">
-      
+        <div className="mt-8">
+          <DetailsTable />
+        </div>
       </div>
     </div>
-    
-      <DetailsTable />
-    
-    </div>
   );
-  
 }
-
 
 export default Home;

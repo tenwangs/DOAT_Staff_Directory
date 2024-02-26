@@ -8,17 +8,16 @@ const DetailsTable = () => {
   const [details, setDetails] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
   const { sortOption, sortDirection, handleSort } = useSortable();
-  const {user} = useAuthContext()
+  const { user } = useAuthContext();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:4000/api/details", {
           headers: {
-           
-              'Authorization': `Bearer ${user.token}`
-            } 
-          
+            'Authorization': `Bearer ${user.token}`
+          }
         });
         if (!response.ok) {
           throw new Error("Failed to fetch details");
@@ -29,14 +28,14 @@ const DetailsTable = () => {
         console.error("Error fetching details:", error.message);
       }
     };
-    if(user){
+    if (user) {
       fetchData();
     }
-    
-  }, [ ,user]);
 
-   // Function to handle sorting of details
-   const sortDetails = (details) => {
+  }, [user]);
+
+  // Function to handle sorting of details
+  const sortDetails = (details) => {
     if (!sortOption) return details;
 
     return [...details].sort((a, b) => {
@@ -59,6 +58,19 @@ const DetailsTable = () => {
 
   const sortedDetails = sortDetails(details);
 
+  // Function to filter details based on search query
+  const filteredDetails = sortedDetails.filter(detail => {
+    const { EmployeeId, Name, Designation, Division, Section } = detail;
+    const query = searchQuery.toLowerCase();
+    return (
+      EmployeeId.toLowerCase().includes(query) ||
+      Name.toLowerCase().includes(query) ||
+      Designation.toLowerCase().includes(query) ||
+      Division.toLowerCase().includes(query) ||
+      Section.toLowerCase().includes(query)
+    );
+  });
+
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`http://localhost:4000/api/details/${id}`, {
@@ -66,7 +78,6 @@ const DetailsTable = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`
-          
         },
       });
       if (!response.ok) {
@@ -83,16 +94,25 @@ const DetailsTable = () => {
   
 
   return (
-    <div id="myElement"  className=" flex flex-col min-h-screen w-5/6 scroll-smooth overflow-auto border border-1">
+    <div className="overflow-x-auto  mt-20">
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search..."
+        className="border p-2 w-full mb-4"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      {/* Table */}
       <table className="w-full divide-y divide-gray-200">
         <thead className="bg-gray-300 ">
           <tr>
-          <th
-              className="px-6 pr-8 py-3 text-left text-sm font-serif font-semibold font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
-              onClick={() => handleSort("EmployeeID")}
+            <th
+              className="px-6 pr-8 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              onClick={() => handleSort("EmployeeId")}
             >
               Employee ID
-              {sortOption === "EmployeeID" && (
+              {sortOption === "EmployeeId" && (
                 <span>{sortDirection === "asc" ? " ↓" : " ↑"}</span>
               )}
             </th>
@@ -138,12 +158,12 @@ const DetailsTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {sortedDetails.map((detail, index) => (
+          {filteredDetails.map((detail, index) => (
             <tr key={index} className="hover:bg-gray-100">
-               <td className="px-6 py-4 whitespace-nowrap ">{detail.EmployeeId}</td>
-              <td className="px-6 py-4 whitespace-nowrap ">{detail.Name}</td>
-              <td className="px-6 py-4 whitespace-nowrap ">{detail.Designation}</td>
-              <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell ">
+              <td className="px-6 py-4 whitespace-nowrap">{detail.EmployeeId}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{detail.Name}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{detail.Designation}</td>
+              <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                 {detail.Division}
               </td>
               <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell ">
@@ -152,7 +172,7 @@ const DetailsTable = () => {
               <td className="px-6 py-4 whitespace-nowrap text-left">
                 <Link
                   to={`/${detail._id}`}
-                 className="text-green-700 p-2 text-sm font-semibold rounded-full transition-colors duration-200 ease-in-out hover:bg-green-500 hover:text-white focus:outline-none mr-2"
+                  className="text-green-700 p-2 text-sm font-semibold rounded-full transition-colors duration-200 ease-in-out hover:bg-green-500 hover:text-white focus:outline-none mr-2"
                 >
                   View
                 </Link>
@@ -215,7 +235,7 @@ const DetailsTable = () => {
       )}
     </div>
   );
- 
+
 };
 
 export default DetailsTable;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom"; // Import useParams hook
+import { useParams } from "react-router-dom"; 
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const AddATrainingForm = ({ onCancel }) => {
-  const { id } = useParams(); // Fetch id from URL
+  const { id } = useParams(); 
   const { user } = useAuthContext();
 
   const [newTraining, setNewTraining] = useState({
@@ -11,8 +11,9 @@ const AddATrainingForm = ({ onCancel }) => {
     StartDate: "",
     EndDate: "",
     Country: "",
-    Funding: "", // Added Funding field
-    reportFile: null // Added reportFile field to store the uploaded file
+    Funding: "", 
+    reportFile: null,
+    certificate: null
   });
 
   const handleInputChange = (e) => {
@@ -24,21 +25,27 @@ const AddATrainingForm = ({ onCancel }) => {
   };
 
   const handleFileChange = (e) => {
-    setNewTraining({
-      ...newTraining,
-      reportFile: e.target.files[0] // Store the selected file
-    });
+    const file = e.target.files[0];
+    const name = e.target.name;
+    setNewTraining((prevTraining) => ({
+      ...prevTraining,
+      [name]: file
+    }));
   };
 
   const handleSave = async () => {
     try {
+      if (newTraining.StartDate > newTraining.EndDate) {
+        throw new Error('Start date must be before end date');
+      }
       const formData = new FormData();
       formData.append("Title", newTraining.Title);
       formData.append("StartDate", newTraining.StartDate);
       formData.append("EndDate", newTraining.EndDate);
       formData.append("Country", newTraining.Country);
       formData.append("Funding", newTraining.Funding);
-      formData.append("reportFile", newTraining.reportFile); // Append the file to FormData
+      formData.append("reportFile", newTraining.reportFile);
+      formData.append("certificate", newTraining.certificate);
 
       const response = await fetch(`http://localhost:4000/api/details/addTraining/${id}`, {
         method: 'POST',
@@ -52,21 +59,19 @@ const AddATrainingForm = ({ onCancel }) => {
         throw new Error('Failed to save training');
       }
 
-      // Clear the form
       setNewTraining({
         Title: "",
         StartDate: "",
         EndDate: "",
         Country: "",
-        Funding: "", // Clear Funding field
-        reportFile: null // Clear reportFile field
+        Funding: "", 
+        reportFile: null,
+        certificate: null
       });
 
-      // Close the form
       onCancel();
     } catch (error) {
       console.error('Error:', error.message);
-      // Handle error
     }
   };
 
@@ -116,9 +121,17 @@ const AddATrainingForm = ({ onCancel }) => {
           className="text-gray-800 mb-2 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
         />
         <input
-          type="file" // Change input type to file
+          type="file"
           name="reportFile"
-          onChange={handleFileChange} // Add onChange handler to handle file selection
+          onChange={handleFileChange}
+          placeholder="reportFile"
+          className="text-gray-800 mb-2 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
+        />
+         <input
+          type="file"
+          name="certificate"
+          onChange={handleFileChange}
+          placeholder="certificate"
           className="text-gray-800 mb-2 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
         />
         <div className="flex justify-end">
