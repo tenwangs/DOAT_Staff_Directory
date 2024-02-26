@@ -187,7 +187,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   onClick={() => handleSave(detail._id, training._id)}
                   className="bg-blue-600 text-white px-4 py-2 rounded mr-2 focus:outline-none hover:bg-blue-700"
                 >
-                  Save
+                  Saves
                 </button>
                 <button
                   type="button"
