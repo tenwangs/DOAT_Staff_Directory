@@ -41,6 +41,9 @@ const BasicInfoSection = ({ detail }) => {
         console.log("Updated detail:", data);
         setIsEditing(false);
         setSuccessMessage("Detail updated successfully");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 2000);
       })
       .catch((error) => {
         console.error("Error updating detail:", error);

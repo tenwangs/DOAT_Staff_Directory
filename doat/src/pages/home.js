@@ -133,6 +133,9 @@ function Home() {
         setDivision(null);
         setSection(null);
         setSuccessMessage("Employee detail added successfully");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 2000);
       }
     } catch (error) {
       setErrorMessage(`Error adding employee detail: ${error.message}`);
