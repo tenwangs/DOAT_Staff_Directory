@@ -21,13 +21,13 @@ function Navbar() {
 
   return (
     <div>
-    <nav className="bg-gray-800 flex items-center justify-between px-4 py-2">
+    <nav className="bg-gray-800 flex items-center justify-between px-4 py-2 pb-4 pt-4">
       <div className="pl-8">
         <img src={logo} className="w-20 h-20 rounded-full" />
       </div>
       <div className="flex flex-col pb-2 pl-60 text-gray-300 justify-between items-center">
-  <p className="font-bold text-xl pr-2">༄༅། ། གནམ་གྲུའི་སྐྱེལ་འདྲེན་ལས་ཁུངས། </p>
-  <p className="font-semibold pt-1 font-arial"> DEPARTMENT OF AIR TRANSPORT </p>
+  <p className="font-bold text-xl font-serif pr-2">༄༅། ། གནམ་གྲུའི་སྐྱེལ་འདྲེན་ལས་ཁུངས། </p>
+  <p className="font-semibold pt-1 font-serif"> DEPARTMENT OF AIR TRANSPORT </p>
 </div>
 
       

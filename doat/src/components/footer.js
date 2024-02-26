@@ -7,20 +7,19 @@ const Footer = () => {
 
     const details = (
         <div className="transition-all duration-500 w-2/6 ml-40 font-semibold ">
-            <p>Department of Air Transport
-Ministry of Infrastructure and Transport
-Paro International Airport; Bhutan
-Tel : +975 8-271403
-P.O. Box No. : 1220
+            <p>Department of Air Transport <br/>
+Ministry of Infrastructure and Transport<br/>
+Paro International Airport; Bhutan<br/>
+Tel : +975 8-271403<br/>
 Email : doat@doat.gov.bt </p>
         </div>
     );
 
     const contactUs = (
-        <div className="transition-all duration-500 mt-4 w-2/6 ml-40 font-semibold">
-           <p>Email:enquiry@drukair.com.bt  
-            Contact: 1300 (within Bhutan)
-            +975 8 276430 (International)
+        <div className="transition-all duration-500 mt-4 pb-4 w-2/6 ml-40 font-semibold">
+           <p>Email:enquiry@drukair.com.bt <br/>
+            Contact: 1300 (within Bhutan) <br/>
+            +975 8 276430 (International) <br/>
             Operational: 7AM - 9PM (GMT +6)</p>
         </div>
         
@@ -28,7 +27,7 @@ Email : doat@doat.gov.bt </p>
     
 
     return (
-        <div className=''> 
+        <div className='mt-40 overflow-auto'> 
         <footer className="bg-gray-800 text-gray-300 p-6 flex ">
             <div className="flex flex-col justify-between items-center  mr-4 ml-40">
                 <button onClick={() => {setActiveSection('details'); setDetailsButtonColor('bg-gray-400'); setContactUsButtonColor('bg-gray-800')}} className={`${detailsButtonColor} rounded pl-12 pr-12 pt-2 pb-2 font-semibold hover:bg-gray-200 border-solid border-2 border-gray-700`}>Details</button>

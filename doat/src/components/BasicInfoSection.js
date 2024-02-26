@@ -49,12 +49,12 @@ const BasicInfoSection = ({ detail }) => {
   };
 
   return (
-    <div className="mb-4">
-      <h2 className="text-xl font-semibold text-gray-800 mb-2">Detail</h2>
+    <div className="mb-8 bg-gray-100 p-8 rounded ">
+      <h2 className="text-xl font-semibold text-gray-800 font-serif pl-40 ml-6 mb-2">Detail</h2>
       {isEditing ? (
         <form className="flex flex-col mb-2">
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Employee ID:</strong>
+            <strong className="text-gray-700 font-mono">Employee ID:</strong>
             <input
               type="text"
               name="EmployeeId"
@@ -64,7 +64,7 @@ const BasicInfoSection = ({ detail }) => {
             />
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Name:</strong>
+            <strong className="text-gray-700 font-mono">Name:</strong>
             <input
               type="text"
               name="Name"
@@ -74,7 +74,7 @@ const BasicInfoSection = ({ detail }) => {
             />
           </div>
           <div className="flex justify-between">
-            <strong className="text-gray-700">Designation:</strong>
+            <strong className="text-gray-700 font-mono">Designation:</strong>
             <input
               type="text"
               name="Designation"
@@ -84,7 +84,7 @@ const BasicInfoSection = ({ detail }) => {
             />
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Division:</strong>
+            <strong className="text-gray-700 font-mono">Division:</strong>
             <input
               type="text"
               name="Division"
@@ -94,7 +94,7 @@ const BasicInfoSection = ({ detail }) => {
             />
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Section:</strong>
+            <strong className="text-gray-700 ">Section:</strong>
             <input
               type="text"
               name="Section"
@@ -123,31 +123,31 @@ const BasicInfoSection = ({ detail }) => {
       ) : (
         <div className="flex flex-col mb-2">
            <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Employee ID:</strong>
-            <p className="text-gray-800 ml-4">{detail.EmployeeId}</p>
+            <strong className="text-gray-700  font-semibold font-mono">Employee ID:</strong>
+            <p className="text-gray-700 font-semibold font-mono ml-2 mr-8">{detail.EmployeeId}</p>
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Name:</strong>
-            <p className="text-gray-800 ml-4">{detail.Name}</p>
+            <strong className="text-gray-700  font-semibold font-mono">Name:</strong>
+            <p className="text-gray-700 font-mono ml-2 mr-4">{detail.Name}</p>
           </div>
           <div className="flex justify-between">
-            <strong className="text-gray-700">Designation:</strong>
-            <p className="text-gray-800 ml-4">{detail.Designation}</p>
+            <strong className="text-gray-700  font-semibold font-mono">Designation:</strong>
+            <p className="text-gray-700  font-mono ml-2 mr-4">{detail.Designation}</p>
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Division:</strong>
-            <p className="text-gray-800 ml-4">{detail.Division}</p>
+            <strong className="text-gray-700  font-semibold font-mono">Division:</strong>
+            <p className="text-gray-700   font-mono ml-2 mr-4">{detail.Division}</p>
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700">Section:</strong>
-            <p className="text-gray-800 ml-4">{detail.Section}</p>
+            <strong className="text-gray-700  font-semibold font-mono">Section:</strong>
+            <p className="text-gray-700 font-mono ml-2 mr-4">{detail.Section}</p>
           </div>
-          <button
+          {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&(<button
             onClick={() => setIsEditing(true)}
             className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 mt-2 transition duration-300 ease-in-out hover:bg-blue-200"
           >
             Edit
-          </button>
+          </button>)}
         </div>
       )}
     </div>

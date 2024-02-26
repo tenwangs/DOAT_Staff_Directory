@@ -101,6 +101,7 @@ function Home() {
   return (
 <div className="flex flex-col items-center justify-start h-screen p-4 space-y-4">
     <div className="pt-4">
+      {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&( 
  <button
     
     className="bg-blue-500 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
@@ -108,6 +109,7 @@ function Home() {
     >
    Add Employee
 </button>
+)}
 </div>
 
       {showModal && (
@@ -195,10 +197,10 @@ function Home() {
       <div className="">
       
       </div>
-      <div className="mt-8">
+    </div>
+    
       <DetailsTable />
-    </div>
-    </div>
+    
     </div>
   );
   

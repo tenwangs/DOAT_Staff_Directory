@@ -17,8 +17,8 @@ export const useSignup = () => {
     })
     const json = await response.json()
 
-    //restrict user other than tenzinwangs777@gmail.com and 02180090.cst@run.edu.bt to login 
-    if(email !== 'tenzinwangs777@gmail.com' && email !== '02180090.cst@rub.edu.bt' && email !== '02200165.cst@rub.edu.bt'){
+    
+    if(email !== 'kwangchuk@doat.gov.bt' && email !== 'sangay@doat.gov.bt' && email !== 'tgyelten@doat.gov.bt' && email !== 'nrinchen@doat.gov.bt'&& email !== 'tdukpa@doat.gov.bt' && email !== 'wangmo@doat.gov.bt' && email !== 'lamdon@doat.gov.bt'){
      
       setTimeout(() => {
         window.location.reload()

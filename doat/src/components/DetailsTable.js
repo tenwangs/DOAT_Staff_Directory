@@ -80,13 +80,15 @@ const DetailsTable = () => {
     }
   };
 
+  
+
   return (
-    <div className="overflow-x-auto  mt-20">
+    <div id="myElement"  className=" flex flex-col min-h-screen w-5/6 scroll-smooth overflow-auto border border-1">
       <table className="w-full divide-y divide-gray-200">
         <thead className="bg-gray-300 ">
           <tr>
           <th
-              className="px-6 pr-8 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              className="px-6 pr-8 py-3 text-left text-sm font-serif font-semibold font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
               onClick={() => handleSort("EmployeeID")}
             >
               Employee ID
@@ -95,7 +97,7 @@ const DetailsTable = () => {
               )}
             </th>
             <th
-              className="px-6 py-3 text-left pr-40 text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase tracking-wider cursor-pointer"
               onClick={() => handleSort("Name")}
             >
               Name
@@ -104,7 +106,7 @@ const DetailsTable = () => {
               )}
             </th>
             <th
-              className="px-6 py-3 pr-8 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+              className="px-6 py-3 pr-8 text-left text-sm font-medium text-gray-700 uppercase font-serif font-semibold tracking-wider cursor-pointer"
               onClick={() => handleSort("Designation")}
             >
               Designation
@@ -113,7 +115,7 @@ const DetailsTable = () => {
               )}
             </th>
             <th
-              className="px-6 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer hidden lg:table-cell"
+              className="px-6 py-3 text-left text-sm font-medium text-gray-700 font-serif font-semibold uppercase tracking-wider cursor-pointer hidden lg:table-cell"
               onClick={() => handleSort("Division")}
             >
               Division
@@ -122,7 +124,7 @@ const DetailsTable = () => {
               )}
             </th>
             <th
-              className="px-6 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer hidden lg:table-cell"
+              className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider font-serif font-semibold cursor-pointer hidden lg:table-cell"
               onClick={() => handleSort("Section")}
             >
               Section
@@ -130,7 +132,7 @@ const DetailsTable = () => {
                 <span>{sortDirection === "asc" ? " ↓" : " ↑"}</span>
               )}
             </th>
-            <th className="px-6 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left font-serif font-semibold text-sm font-medium text-gray-700 uppercase tracking-wider">
               Action
             </th>
           </tr>
@@ -138,13 +140,13 @@ const DetailsTable = () => {
         <tbody className="bg-white divide-y divide-gray-200">
           {sortedDetails.map((detail, index) => (
             <tr key={index} className="hover:bg-gray-100">
-               <td className="px-6 py-4 whitespace-nowrap">{detail.EmployeeId}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{detail.Name}</td>
-              <td className="px-6 py-4 whitespace-nowrap">{detail.Designation}</td>
-              <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+               <td className="px-6 py-4 whitespace-nowrap ">{detail.EmployeeId}</td>
+              <td className="px-6 py-4 whitespace-nowrap ">{detail.Name}</td>
+              <td className="px-6 py-4 whitespace-nowrap ">{detail.Designation}</td>
+              <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell ">
                 {detail.Division}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+              <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell ">
                 {detail.Section}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-left">
@@ -154,7 +156,7 @@ const DetailsTable = () => {
                 >
                   View
                 </Link>
-                <button
+                {user.email!== 'kwangchuk@doat.gov.bt' &&  user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&  (<button
                   className=" p-2 pl-4 pr-4 text-sm font-semibold rounded-full transition-colors duration-200 ease-in-out hover:bg-red-500 hover:text-white focus:outline-none mr-2"
                   onClick={() => setDeleteId(detail._id)}
                   title="Delete Item"
@@ -163,7 +165,7 @@ const DetailsTable = () => {
                   <span className="absolute top-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-l px-2 py-1 rounded-md opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out group-hover:opacity-100">
                     Delete
                   </span>
-                </button>
+                </button>)} 
               </td>
             </tr>
           ))}

@@ -130,10 +130,10 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
   
 
   return (
-    <div className="mb-8">
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">Trainings</h3>
+    <div className="mb-8 ">
+      <h3 className="text-lg font-bold font-serif text-blue-800 text-gray-800 mb-2 pl-40 ml-8">Trainings</h3>
       {detail.Trainings.map((training, index) => (
-        <div key={index} className="mb-4 border rounded p-4">
+        <div key={index} className="mb-4 border rounded  bg-gray-100 p-4">
           {editedTrainingIndex === index ? (
             <form className="flex flex-col">
               <input
@@ -200,40 +200,41 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
             </form>
           ) : (
             <>
-              <p className="text-gray-700 mb-2">
+              <p className="text-gray-700 mb-2 font-mono">
                 <strong>Title:</strong> {training.Title}
               </p>
-              <p className="text-gray-700 mb-2">
+              <p className="text-gray-700 font-mono mb-2">
                 <strong>Start Date:</strong> {training.StartDate}
               </p>
-              <p className="text-gray-700 mb-2">
+              <p className="text-gray-700 font-mono mb-2">
                 <strong>End Date:</strong> {training.EndDate}
               </p>
-              <p className="text-gray-700 mb-2">
+              <p className="text-gray-700 font-mono mb-2">
                 <strong>Country:</strong> {training.Country}
               </p>
-              <p className="text-gray-700 mb-2">
+              <p className="text-gray-700 font-mono mb-2">
                 <strong>Funding:</strong> {training.Funding}
               </p>
-              <p className="text-gray-700 mb-2">
+              <p className="text-gray-700 font-mono mb-2">
                 <strong>Duration:</strong>{" "}
                 {calculateDuration(training.StartDate, training.EndDate)} days
               </p>
               {training.reportFile && (
-                <p className="text-gray-700 mb-2">
+                <p className="text-gray-700 font-mono mb-2">
                   <strong>File:</strong>{" "}
                   <button onClick={handleDownload}>Download File</button>
                 </p>
               )}
               {console.log("Report File URL:", training.reportFile)};
               <div className="flex justify-end">
-                <button
+              {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&( <button
                   onClick={() => handleDeleteTraining(training._id)}
                   className="text-red-600 hover:text-red-800 focus:outline-none border border-red-600 rounded px-2 py-1 mr-2 transition duration-300 ease-in-out hover:bg-red-200"
                 >
                   Delete
                 </button>
-                <button
+          )}
+                  {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&(<button
                   onClick={() => {
                     setEditedTrainingIndex(index);
                     setEditedTraining({
@@ -248,7 +249,7 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-200"
                 >
                   Edit
-                </button>
+                </button>)}
               </div>
             </>
           )}
@@ -259,12 +260,15 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
           <AddATrainingForm onCancel={handleCancel} />
         </div>
       ) : (
-        <button
+        <div>
+        {user.email !== 'kwangchuk@doat.gov.bt' && user.email !== 'sangay@doat.gov.bt' && user.email !== 'tgyelten@doat.gov.bt' && user.email !== 'nrinchen@doat.gov.bt'&& user.email !== 'tdukpa@doat.gov.bt' &&(<button
           onClick={toggleAddTraining}
           className="text-green-600 hover:text-green-800 focus:outline-none border border-green-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-green-200"
         >
           Add Training
         </button>
+        )}
+        </div>
       )}
     </div>
   );
