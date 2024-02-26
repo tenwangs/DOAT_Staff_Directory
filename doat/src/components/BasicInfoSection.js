@@ -10,6 +10,9 @@ const BasicInfoSection = ({ detail }) => {
     Division: detail.Division,
     Section: detail.Section
   });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const {user} = useAuthContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,7 +21,6 @@ const BasicInfoSection = ({ detail }) => {
       [name]: value
     }));
   };
-  const {user} = useAuthContext()
 
   const handleSave = () => {
     fetch(`http://localhost:4000/api/details/updateInfo/${detail._id}`, {
@@ -38,9 +40,11 @@ const BasicInfoSection = ({ detail }) => {
       .then((data) => {
         console.log("Updated detail:", data);
         setIsEditing(false);
+        setSuccessMessage("Detail updated successfully");
       })
       .catch((error) => {
         console.error("Error updating detail:", error);
+        setErrorMessage("Error updating detail. Please try again later.");
       });
   };
 
@@ -74,35 +78,52 @@ const BasicInfoSection = ({ detail }) => {
               className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
             />
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-1">
             <strong className="text-gray-700 font-mono">Designation:</strong>
-            <input
-              type="text"
+            <select
               name="Designation"
               value={editedDetail.Designation}
               onChange={handleInputChange}
               className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            />
+            >
+              <option value="">Select Designation</option>
+              <option value="Manager">Manager</option>
+              <option value="Executive">Executive</option>
+            </select>
           </div>
           <div className="flex justify-between mb-1">
             <strong className="text-gray-700 font-mono">Division:</strong>
-            <input
-              type="text"
+            <select
               name="Division"
               value={editedDetail.Division}
               onChange={handleInputChange}
               className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            />
+            >
+              <option value="">Select Division</option>
+              <option value="Air Navigation Service">Air Navigation Service</option>
+              <option value="Airport Management">Airport Management</option>
+              <option value="Airport Emergency and Security">Airport Emergency and Security</option>
+              <option value="Aerodrome Planning and Maintenance">Aerodrome Planning and Maintenance</option>
+            </select>
           </div>
           <div className="flex justify-between mb-1">
-            <strong className="text-gray-700 ">Section:</strong>
-            <input
-              type="text"
+            <strong className="text-gray-700 font-mono">Section:</strong>
+            <select
               name="Section"
               value={editedDetail.Section}
               onChange={handleInputChange}
               className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            />
+            >
+              <option value="">Select Section</option>
+              <option value="Air Traffic Control">Air Traffic Control</option>
+              <option value="CNS">CNS</option>
+              <option value="Aviation Security">Aviation Security</option>
+              <option value="Airport Emergency">Airport Emergency</option>
+              <option value="Bumthang Airport Management">Bumthang Airport Management</option>
+              <option value="Yonphula Airport Management">Yonphula Airport Management</option>
+              <option value="Gelephu Airport Management">Gelephu Airport Management</option>
+              <option value="Paro Airport Management">Paro Airport Management</option>
+            </select>
           </div>
           <div className="mt-2">
             <button
@@ -151,6 +172,8 @@ const BasicInfoSection = ({ detail }) => {
           </button>)}
         </div>
       )}
+      {errorMessage && <p className="text-red-500 mb-2">{errorMessage}</p>}
+      {successMessage && <p className="text-green-500 mb-2">{successMessage}</p>}
     </div>
   );
 };
