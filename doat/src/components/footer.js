@@ -32,8 +32,7 @@ Email : doat@doat.gov.bt </p>
             <div className="flex flex-col justify-between items-center  mr-4 ml-40">
                 <button onClick={() => {setActiveSection('details'); setDetailsButtonColor('bg-gray-400'); setContactUsButtonColor('bg-gray-800')}} className={`${detailsButtonColor} rounded pl-12 pr-12 pt-2 pb-2 font-semibold hover:bg-gray-200 border-solid border-2 border-gray-700`}>Details</button>
                 <button onClick={() => {setActiveSection('contactUs'); setContactUsButtonColor('bg-gray-400'); setDetailsButtonColor('bg-gray-800')}} className={`${contactUsButtonColor} rounded pl-8 pr-10  pt-2 pb-2 font-semibold hover:bg-gray-200 mt-4 border-solid border-2 border-gray-700`}>Contact_us</button>
-                
-               
+            
             </div>
             <div className=" ml-4 flex-grow">
                 {activeSection === 'details' ? details : null}
