@@ -112,12 +112,12 @@ function Home() {
   return (
     <div className="flex flex-col items-center justify-start h-screen p-4 space-y-4">
       <div className="pt-4">
-        <button
+      {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&( <button
           className="bg-blue-500 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
           onClick={() => setShowModal(true)}
         >
           Add Employee
-        </button>
+        </button>)}
       </div>
       {showModal && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center ">

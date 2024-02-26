@@ -49,7 +49,7 @@ const BasicInfoSection = ({ detail }) => {
   };
 
   return (
-    <div className="mb-8 bg-gray-100 p-8 rounded ">
+    <div className="mb-8 bg-gray-100 p-8 rounded  ">
       <h2 className="text-xl font-semibold text-gray-800 font-serif pl-40 ml-6 mb-2">Detail</h2>
       {isEditing ? (
         <form className="flex flex-col mb-2">
@@ -122,8 +122,8 @@ const BasicInfoSection = ({ detail }) => {
           </div>
         </form>
       ) : (
-        <div className="flex flex-col mb-2">
-           <div className="flex justify-between mb-1">
+        <div className="flex flex-col mb-2 overflow-auto">
+           <div className="flex justify-between mb-1 ">
             <strong className="text-gray-700  font-semibold font-mono">Employee ID:</strong>
             <p className="text-gray-700 font-semibold font-mono ml-2 mr-8">{detail.EmployeeId}</p>
           </div>

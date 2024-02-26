@@ -157,9 +157,9 @@ const DetailsTable = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white divide-y divide-gray-200 ">
           {filteredDetails.map((detail, index) => (
-            <tr key={index} className="hover:bg-gray-100">
+            <tr key={index} className="hover:bg-gray-100 overflow-auto ">
               <td className="px-6 py-4 whitespace-nowrap">{detail.EmployeeId}</td>
               <td className="px-6 py-4 whitespace-nowrap">{detail.Name}</td>
               <td className="px-6 py-4 whitespace-nowrap">{detail.Designation}</td>
