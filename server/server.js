@@ -35,6 +35,7 @@ app.use("/api/user", userRoute);
 app.post("/api/user/forgotPassword", resetPassword);
 app.get("/api/user/forgotPassword/:id/:tokens", passwordTokenVerification);
 app.patch("/api/user/forgotPassword/:id/:toke", passwordHashed);
+ 
 
 
 //connect to db

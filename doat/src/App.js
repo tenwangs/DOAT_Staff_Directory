@@ -29,9 +29,9 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
           </Routes>
         </div>
-        
+        <Footer />
       </div>
-      <Footer />
+  
     </Router>
   );
 }

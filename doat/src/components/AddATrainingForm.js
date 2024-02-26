@@ -77,8 +77,9 @@ const AddATrainingForm = ({ onCancel }) => {
 
   return (
     <div className="mb-4 border rounded p-4">
+      
       <h3 className="text-lg font-semibold text-gray-800 mb-2">Add Training</h3>
-      <form className="flex flex-col">
+      <form className="flex flex-col ">
         <input
           type="text"
           name="Title"
