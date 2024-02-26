@@ -10,6 +10,10 @@ function Home() {
   const [designation, setDesignation] = useState(null);
   const [division, setDivision] = useState(null);
   const [section, setSection] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const { user } = useAuthContext();
 
   const designations = [
@@ -66,9 +70,36 @@ function Home() {
     }),
   };
 
+  const validateForm = () => {
+    let errors = {};
+    if (!employeeId.trim()) {
+      errors = { ...errors, employeeId: "Employee ID is required" };
+    }
+    if (!name.trim()) {
+      errors = { ...errors, name: "Name is required" };
+    }
+    if (!designation) {
+      errors = { ...errors, designation: "Designation is required" };
+    }
+    if (!division) {
+      errors = { ...errors, division: "Division is required" };
+    }
+    if (!section) {
+      errors = { ...errors, section: "Section is required" };
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
-    console.log("form triggered");
+    if (!validateForm()) {
+      return;
+    }
+    setIsLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
     const data = {
       EmployeeId: employeeId,
       Name: name,
@@ -86,13 +117,14 @@ function Home() {
         },
         body: JSON.stringify(data),
       });
+      
       if (!response.ok) {
         const errorData = await response.json();
         if (
           response.status === 400 &&
           errorData.error === "EmployeeId already exists"
         ) {
-          alert("Employee with this ID already exists!");
+          setErrorMessage("Employee with this ID already exists!");
         } else {
           throw new Error(errorData.error);
         }
@@ -102,10 +134,12 @@ function Home() {
         setDesignation(null);
         setDivision(null);
         setSection(null);
-        console.log("Employee detail added successfully");
+        setSuccessMessage("Employee detail added successfully");
       }
     } catch (error) {
-      console.error("Error adding employee detail:", error.message);
+      setErrorMessage(`Error adding employee detail: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -148,51 +182,59 @@ function Home() {
             <h3 className="text-lg leading-6 font-semibold text-gray-900 pb-4">
               Enter Details
             </h3>
+            {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+            {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
             <form onSubmit={handleSave}>
               <input
                 type="text"
                 placeholder="Employee Id"
-                className="border p-2 w-full mb-4"
+                className={`border p-2 w-full mb-4 ${fieldErrors.employeeId ? 'border-red-500' : ''}`}
                 value={employeeId}
                 onChange={(e) => setEmployeeId(e.target.value)}
               />
+              {fieldErrors.employeeId && <p className="text-red-500 mb-2">{fieldErrors.employeeId}</p>}
               <input
                 type="text"
                 placeholder="Name"
-                className="border p-2 w-full mb-4"
+                className={`border p-2 w-full mb-4 ${fieldErrors.name ? 'border-red-500' : ''}`}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+              {fieldErrors.name && <p className="text-red-500 mb-2">{fieldErrors.name}</p>}
               <Select
                 options={designations}
                 styles={customStyles}
-                className="mb-4"
+                className={`mb-4 ${fieldErrors.designation ? 'border-red-500' : ''}`}
                 placeholder="Designation"
                 value={designation}
                 onChange={setDesignation}
               />
+              {fieldErrors.designation && <p className="text-red-500 mb-2">{fieldErrors.designation}</p>}
               <Select
                 options={divisions}
                 styles={customStyles}
-                className="mb-4"
+                className={`mb-4 ${fieldErrors.division ? 'border-red-500' : ''}`}
                 placeholder="Division"
                 value={division}
                 onChange={setDivision}
               />
+              {fieldErrors.division && <p className="text-red-500 mb-2">{fieldErrors.division}</p>}
               <Select
                 options={sections}
                 styles={customStyles}
-                className="mb-4"
+                className={`mb-4 ${fieldErrors.section ? 'border-red-500' : ''}`}
                 placeholder="Section"
                 value={section}
                 onChange={setSection}
               />
+              {fieldErrors.section && <p className="text-red-500 mb-2">{fieldErrors.section}</p>}
               <div className="flex justify-end">
                 <button
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  disabled={isLoading}
                 >
-                  Save
+                  {isLoading ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>
