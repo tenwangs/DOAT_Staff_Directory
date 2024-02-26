@@ -19,8 +19,8 @@ const Login = () => {
   }
 
   return (
-    <div className="flex items-center pb-8  justify-center h-screen bg-gray-200 rounded">
-      <form className="login bg-white shadow-md rounded px-8 pt-8 pb-40 mb-4 max-w-md w-full " onSubmit={handleSubmit}>
+    <div className="flex items-center pb-8 mt-18 justify-center h-screen bg-white rounded">
+      <form className="login bg-gray-100 border-2 shadow-md rounded px-8 pt-8 pb-40 mb-4 max-w-md w-full " onSubmit={handleSubmit}>
         <h3 className="block text-gray-700 text-sm font-bold mb-2 ml-20 pl-14">Welcome back</h3>
         <p className="mb-4 text-gray-600 pl-20 pb-2">Please Login to your account</p>
         
@@ -31,7 +31,7 @@ const Login = () => {
             id="email"
             onChange={(e) => setEmail(e.target.value)} 
             value={email} 
-            placeholder="user@gmail.com"
+            placeholder="Email"
             className="shadow appearance-none hover:bg-gray-200 hover:border-gray-400 border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>

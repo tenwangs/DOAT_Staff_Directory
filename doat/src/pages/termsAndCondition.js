@@ -9,7 +9,7 @@ const TermsAndConditions = () => {
       <p className=''>
        <h1 className='font-bold ml-60 pl-80 underline'>Terms and Conditions </h1><br/>
 
-<h1  className='font-semibold'>User Conduct and Responsibilities </h1> <br/>
+<h1  className='font-semibold font-mono'>User Conduct and Responsibilities </h1> 
 
 By using our services, you agree to:  <br/>
 
@@ -20,11 +20,16 @@ Violations and Penalties <br/>
 If we determine that you have violated these terms, we may, at our sole discretion, take any action we deem appropriate, including but not limited to: <br/>
 
 * Suspending or terminating your access to our services; <br/>
-* Taking legal action against you.  <br/>
+* Taking legal action against you.  <br/><br/>
 
-Governing Law <br/>
-
-These terms and conditions are governed by the laws of Bhutan. Any disputes arising out of or relating to these terms shall be resolved in accordance with Bhutanese law[^2^][4].
+<p className='font-semibold font-mono'>GOVERNING LAW<br/></p>
+ <p className='font-semibold font-mono'>CHAPTER 28: OFFENCES RELATED TO PUBLIC AND CIVIC DUTIES <br/></p>
+Reporting of false information <br/>
+426. A defendant shall be guilty of the offence of reporting of false information, if the 
+defendant knowingly reports false information to a lawful authority with the intent to 
+deceive that authority. 
+Grading of reporting of false information <br/>
+427. The offence of reporting of false information shall be a petty misdemeanour.
 
 
 

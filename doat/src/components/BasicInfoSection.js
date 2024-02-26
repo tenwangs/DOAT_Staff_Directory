@@ -49,7 +49,7 @@ const BasicInfoSection = ({ detail }) => {
   };
 
   return (
-    <div className="mb-8 bg-gray-100 p-8 rounded  ">
+    <div className="mb-8 bg-gray-200 p-8 rounded  ">
       <h2 className="text-xl font-semibold text-gray-800 font-serif pl-40 ml-6 mb-2">Detail</h2>
       {isEditing ? (
         <form className="flex flex-col mb-2">

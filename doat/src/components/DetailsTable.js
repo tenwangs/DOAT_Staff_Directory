@@ -94,16 +94,20 @@ const DetailsTable = () => {
   
 
   return (
-    <div className="overflow-x-auto  mt-20">
+    <div className="">
+    <div className=" mt-8 ">
+      <div className="pb-4">
       {/* Search Bar */}
       <input
         type="text"
         placeholder="Search..."
-        className="border p-2 w-full mb-4"
+        className="border p-2 w-2/6 mb-4 pl-4 bg-gray-200 rounded border-gray-800 hover:bg-gray-100 focus:outline-none focus:border-gray-500 transition-colors duration-200 ease-in-out"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
+      </div>
       {/* Table */}
+      <div className="overflow-auto h-screen">
       <table className="w-full divide-y divide-gray-200">
         <thead className="bg-gray-300 ">
           <tr>
@@ -157,9 +161,9 @@ const DetailsTable = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200 ">
+        <tbody className="bg-white divide-gray-200">
           {filteredDetails.map((detail, index) => (
-            <tr key={index} className="hover:bg-gray-100 overflow-auto ">
+            <tr key={index} className="hover:bg-gray-100 overflow-auto">
               <td className="px-6 py-4 whitespace-nowrap">{detail.EmployeeId}</td>
               <td className="px-6 py-4 whitespace-nowrap">{detail.Name}</td>
               <td className="px-6 py-4 whitespace-nowrap">{detail.Designation}</td>
@@ -191,6 +195,7 @@ const DetailsTable = () => {
           ))}
         </tbody>
       </table>
+      </div>
       {/* Confirmation Modal */}
       {deleteId && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -233,6 +238,7 @@ const DetailsTable = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 

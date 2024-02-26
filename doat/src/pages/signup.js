@@ -13,8 +13,8 @@ const Signup = () => {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-200">
-    <form className="bg-white shadow-md rounded px-8 pt-8 pb-40 mb-4 max-w-md w-full" onSubmit={handleSubmit}>
+    <div className="flex items-center justify-center h-screen bg-white">
+    <form className="bg-gray-100 border-2 shadow-md rounded px-8 pt-8 pb-40 mb-4 max-w-md w-full" onSubmit={handleSubmit}>
   <h3 className="block text-gray-700 text-sm pl-40 font-bold mb-2">Sign Up</h3>
   
   <div className="mb-4">
@@ -22,7 +22,7 @@ const Signup = () => {
     <input 
       type="email" 
       id="email"
-      placeholder="user@gmail.com"
+      placeholder="Email"
       onChange={(e) => setEmail(e.target.value)} 
       value={email} 
       className="shadow appearance-none hover:border-gray-400 border rounded w-full py-2 px-3 text-gray-700 leading-tight hover:bg-gray-200 focus:outline-none focus:shadow-outline"
