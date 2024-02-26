@@ -55,7 +55,7 @@ function Home() {
   ];
 
   const customStyles = {
-    menuList: (provided, state) => ({
+    menuList: (provided) => ({
       ...provided,
       maxHeight: "100px",
       overflow: "auto",
@@ -99,7 +99,6 @@ function Home() {
     setIsLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
-
     const data = {
       EmployeeId: employeeId,
       Name: name,
@@ -107,7 +106,6 @@ function Home() {
       Division: division ? division.value : "",
       Section: section ? section.value : "",
     };
-
     try {
       const response = await fetch("http://localhost:4000/api/details", {
         method: "POST",
@@ -117,7 +115,7 @@ function Home() {
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         if (
@@ -146,17 +144,22 @@ function Home() {
   return (
     <div className="flex flex-col items-center justify-start h-screen p-4 space-y-4">
       <div className="pt-4">
-      {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&( <button
-          className="bg-orange-700 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
-          onClick={() => setShowModal(true)}
-        >
-          Add Employee
-        </button>)}
+        {user.email !== "kwangchuk@doat.gov.bt" &&
+          user.email !== "sangay@doat.gov.bt" &&
+          user.email !== "tgyelten@doat.gov.bt" &&
+          user.email !== "nrinchen@doat.gov.bt" &&
+          user.email !== "tdukpa@doat.gov.bt" && (
+            <button
+              className="bg-orange-700 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
+              onClick={() => setShowModal(true)}
+            >
+              Add Employee
+            </button>
+          )}
       </div>
       {showModal && (
         <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center ">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-
           <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl max-w-md w-full p-8">
             <button
               type="button"
@@ -178,63 +181,86 @@ function Home() {
                 ></path>
               </svg>
             </button>
-
             <h3 className="text-lg leading-6 font-semibold text-gray-900 pb-4">
               Enter Details
             </h3>
-            {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
-            {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
+            {errorMessage && (
+              <p className="text-red-500 mb-4">{errorMessage}</p>
+            )}
+            {successMessage && (
+              <p className="text-green-500 mb-4">{successMessage}</p>
+            )}
             <form onSubmit={handleSave}>
               <input
                 type="text"
                 placeholder="Employee Id"
-                className={`border p-2 w-full mb-4 ${fieldErrors.employeeId ? 'border-red-500' : ''}`}
+                className={`border p-2 w-full mb-4 ${
+                  fieldErrors.employeeId ? "border-red-500" : ""
+                }`}
                 value={employeeId}
                 onChange={(e) => setEmployeeId(e.target.value)}
               />
-              {fieldErrors.employeeId && <p className="text-red-500 mb-2">{fieldErrors.employeeId}</p>}
+              {fieldErrors.employeeId && (
+                <p className="text-red-500 mb-2">{fieldErrors.employeeId}</p>
+              )}
               <input
                 type="text"
                 placeholder="Name"
-                className={`border p-2 w-full mb-4 ${fieldErrors.name ? 'border-red-500' : ''}`}
+                className={`border p-2 w-full mb-4 ${
+                  fieldErrors.name ? "border-red-500" : ""
+                }`}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              {fieldErrors.name && <p className="text-red-500 mb-2">{fieldErrors.name}</p>}
+              {fieldErrors.name && (
+                <p className="text-red-500 mb-2">{fieldErrors.name}</p>
+              )}
               <Select
                 options={designations}
                 styles={customStyles}
-                className={`mb-4 ${fieldErrors.designation ? 'border-red-500' : ''}`}
+                className={`mb-4 ${
+                  fieldErrors.designation ? "border-red-500" : ""
+                }`}
                 placeholder="Designation"
                 value={designation}
                 onChange={setDesignation}
               />
-              {fieldErrors.designation && <p className="text-red-500 mb-2">{fieldErrors.designation}</p>}
+              {fieldErrors.designation && (
+                <p className="text-red-500 mb-2">{fieldErrors.designation}</p>
+              )}
               <Select
                 options={divisions}
                 styles={customStyles}
-                className={`mb-4 ${fieldErrors.division ? 'border-red-500' : ''}`}
+                className={`mb-4 ${
+                  fieldErrors.division ? "border-red-500" : ""
+                }`}
                 placeholder="Division"
                 value={division}
                 onChange={setDivision}
               />
-              {fieldErrors.division && <p className="text-red-500 mb-2">{fieldErrors.division}</p>}
+              {fieldErrors.division && (
+                <p className="text-red-500 mb-2">{fieldErrors.division}</p>
+              )}
               <Select
                 options={sections}
                 styles={customStyles}
-                className={`mb-4 ${fieldErrors.section ? 'border-red-500' : ''}`}
+                className={`mb-4 ${
+                  fieldErrors.section ? "border-red-500" : ""
+                }`}
                 placeholder="Section"
                 value={section}
                 onChange={setSection}
               />
-              {fieldErrors.section && <p className="text-red-500 mb-2">{fieldErrors.section}</p>}
+              {fieldErrors.section && (
+                <p className="text-red-500 mb-2">{fieldErrors.section}</p>
+              )}
               <div className="flex justify-end">
                 <button
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Saving...' : 'Save'}
+                  {isLoading ? "Saving..." : "Save"}
                 </button>
               </div>
             </form>
@@ -242,7 +268,7 @@ function Home() {
         </div>
       )}
       <div>
-        <div className="">
+        <div className="mt-8">
           <DetailsTable />
         </div>
       </div>
