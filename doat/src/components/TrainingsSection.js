@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import AddATrainingForm from "./AddATrainingForm";
 import { useAuthContext } from "../hooks/useAuthContext";
+import edit from "../icons/icons8-edit-50.png";
+import trash from "../icons/icons8-trash-can-50.png";
+import download from "../icons/icons8-downloading-updates-50.png";
+import search from "../icons/icons8-search-50.png";
+import close from "../icons/icons8-close-50.png";
+import add from "../icons/icons8-add-50.png";
 
 const TrainingsSection = ({ detail, handleDeleteTraining }) => {
   const [editedTrainingIndex, setEditedTrainingIndex] = useState(null);
@@ -14,6 +20,8 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     certificate: null,
   });
   const [showAddTraining, setShowAddTraining] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuthContext();
 
   const handleInputChange = (e) => {
@@ -150,12 +158,96 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
     return date.toLocaleDateString("en-US", options);
   };
 
+  const filteredTrainings = detail.Trainings.filter((training) => {
+    const searchTermDate = new Date(searchTerm);
+    const startDateFormatted = formatDate(training.StartDate);
+    const endDateFormatted = formatDate(training.EndDate);
+    const duration = calculateDuration(training.StartDate, training.EndDate);
+    return (
+      training.Title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      training.Country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      training.Funding.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      startDateFormatted.includes(searchTerm) ||
+      endDateFormatted.includes(searchTerm) ||
+      duration.toString().includes(searchTerm) ||
+      (searchTermDate !== "Invalid Date" &&
+        (startDateFormatted === formatDate(searchTermDate) ||
+          endDateFormatted === formatDate(searchTermDate)))
+    );
+  });
+
+  const handleSearchIconClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setIsExpanded(false);
+  };
+
   return (
     <div className="mb-8 ">
       <h3 className="text-lg font-bold font-serif text-blue-800 text-gray-800 mb-2 pl-40 ml-8">
         Trainings
       </h3>
-      {detail.Trainings.map((training, index) => (
+      <div className="flex flex-col">
+        <div className="flex items-start">
+          <div className="mr-4">
+            {isExpanded ? (
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                />
+                <button
+                  className="absolute right-0 top-0 bottom-0 px-2 bg-gray-200 rounded-r focus:outline-none"
+                  onClick={handleClearSearch}
+                >
+                  <img src={close} alt="close" className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  className="bg-gray-200 rounded-full p-2 focus:outline-none"
+                  onClick={handleSearchIconClick}
+                  title="Search Trainings"
+                >
+                  <img src={search} alt="search" className="h-6 w-6" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex items-end justify-end mt-4 mb-4">
+          {showAddTraining ? (
+            <div>
+              <AddATrainingForm onCancel={handleCancel} />
+            </div>
+          ) : (
+            <div>
+              {user.email !== "kwangchuk@doat.gov.bt" &&
+                user.email !== "sangay@doat.gov.bt" &&
+                user.email !== "tgyelten@doat.gov.bt" &&
+                user.email !== "nrinchen@doat.gov.bt" &&
+                user.email !== "tdukpa@doat.gov.bt" && (
+                  <button
+                    onClick={toggleAddTraining}
+                    className="text-green-600 hover:text-green-800 focus:outline-none border rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-green-300"
+                    title="Add Training"
+                  >
+                    <img src={add} alt="add" className="w-6 h-6" />
+                  </button>
+                )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {filteredTrainings.map((training, index) => (
         <div key={index} className="mb-4 border rounded  bg-gray-100 p-4">
           {editedTrainingIndex === index ? (
             <form className="flex flex-col">
@@ -256,38 +348,50 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
               </p>
               {training.reportFile && (
                 <p className="text-gray-700 font-mono mb-2">
-                  <strong>Report File:</strong>
-                  {getFileNameAfterDoubleHyphen(training.reportFile)}
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        detail._id,
-                        training._id,
-                        "reportFile",
-                        training.reportFile
-                      )
-                    }
+                  <strong>Report File:</strong>{" "}
+                  <span
+                    style={{ display: "inline-flex", alignItems: "center" }}
                   >
-                    Download
-                  </button>
+                    {getFileNameAfterDoubleHyphen(training.reportFile)}
+                    <button
+                      onClick={() =>
+                        handleDownload(
+                          detail._id,
+                          training._id,
+                          "reportFile",
+                          training.reportFile
+                        )
+                      }
+                      style={{ marginLeft: "8px" }}
+                      title="Download File"
+                    >
+                      <img src={download} alt="Download" className="h-6 w-6" />
+                    </button>
+                  </span>
                 </p>
               )}
               {training.certificate && (
                 <p className="text-gray-700 font-mono mb-2">
-                  <strong>Certificate:</strong>
-                  {getFileNameAfterDoubleHyphen(training.certificate)}
-                  <button
-                    onClick={() =>
-                      handleDownload(
-                        detail._id,
-                        training._id,
-                        "certificate",
-                        training.certificate
-                      )
-                    }
+                  <strong>Certificate:</strong>{" "}
+                  <span
+                    style={{ display: "inline-flex", alignItems: "center" }}
                   >
-                    Download
-                  </button>
+                    {getFileNameAfterDoubleHyphen(training.certificate)}
+                    <button
+                      onClick={() =>
+                        handleDownload(
+                          detail._id,
+                          training._id,
+                          "certificate",
+                          training.certificate
+                        )
+                      }
+                      style={{ marginLeft: "8px" }}
+                      title="Download File"
+                    >
+                      <img src={download} alt="Download" className="h-6 w-6" />
+                    </button>
+                  </span>
                 </p>
               )}
               <div className="flex justify-end">
@@ -298,9 +402,10 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   user.email !== "tdukpa@doat.gov.bt" && (
                     <button
                       onClick={() => handleDeleteTraining(training._id)}
-                      className="text-red-600 hover:text-red-800 focus:outline-none border border-red-600 rounded px-2 py-1 mr-2 transition duration-300 ease-in-out hover:bg-red-200"
+                      className="text-red-600 hover:text-red-800 focus:outline-none border rounded px-2 py-1 mr-2 transition duration-300 ease-in-out hover:bg-red-300"
+                      title="Delete Training"
                     >
-                      Delete
+                      <img src={trash} alt="Delete" className="h-6 w-6" />
                     </button>
                   )}
                 {user.email !== "kwangchuk@doat.gov.bt" &&
@@ -321,9 +426,10 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                           certificate: null,
                         });
                       }}
-                      className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-200"
+                      className="text-blue-600 hover:text-blue-800 focus:outline-none border rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-300"
+                      title="Edit Training"
                     >
-                      Edit
+                      <img src={edit} alt="Edit" className="h-6 w-6" />
                     </button>
                   )}
               </div>
@@ -331,26 +437,6 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
           )}
         </div>
       ))}
-      {showAddTraining ? (
-        <div>
-          <AddATrainingForm onCancel={handleCancel} />
-        </div>
-      ) : (
-        <div>
-          {user.email !== "kwangchuk@doat.gov.bt" &&
-            user.email !== "sangay@doat.gov.bt" &&
-            user.email !== "tgyelten@doat.gov.bt" &&
-            user.email !== "nrinchen@doat.gov.bt" &&
-            user.email !== "tdukpa@doat.gov.bt" && (
-              <button
-                onClick={toggleAddTraining}
-                className="text-green-600 hover:text-green-800 focus:outline-none border border-green-600 rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-green-200"
-              >
-                Add Training
-              </button>
-            )}
-        </div>
-      )}
     </div>
   );
 };
