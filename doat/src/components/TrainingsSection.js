@@ -6,8 +6,7 @@ import trash from "../icons/icons8-trash-can-50.png";
 import download from "../icons/icons8-downloading-updates-50.png";
 import search from "../icons/icons8-search-50.png";
 import close from "../icons/icons8-close-50.png";
-import add from "../icons/icons8-add-50.png";
-import upload from "../icons/icons8-upload-50-2.png";
+import add from "../icons/icons8-create-50.png";
 
 const TrainingsSection = ({ detail, handleDeleteTraining }) => {
   const [editedTrainingIndex, setEditedTrainingIndex] = useState(null);

@@ -1,134 +1,225 @@
 import React, { useState } from "react";
-import { useAuthContext } from '../hooks/useAuthContext'
+import { useAuthContext } from "../hooks/useAuthContext";
+import editinfo from "../icons/icons8-edit-50.png";
 
 const BasicInfoSection = ({ detail }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedDetail, setEditedDetail] = useState({
-    EmployeeId : detail.EmployeeId,
+    EmployeeId: detail.EmployeeId,
     Name: detail.Name,
     Designation: detail.Designation,
     Division: detail.Division,
-    Section: detail.Section
+    Section: detail.Section,
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [generalError, setGeneralError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedDetail((prevDetail) => ({
       ...prevDetail,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSave = () => {
-    fetch(`http://localhost:4000/api/details/updateInfo/${detail._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${user.token}`
-      },
-      body: JSON.stringify(editedDetail)
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+    const errors = {};
+    if (!editedDetail.Name.trim()) {
+      errors.Name = "Name is required";
+    }
+    if (!editedDetail.Designation.trim()) {
+      errors.Designation = "Designation is required";
+    }
+    if (!editedDetail.Division.trim()) {
+      errors.Division = "Division is required";
+    }
+    if (!editedDetail.Section.trim()) {
+      errors.Section = "Section is required";
+    }
+    if (Object.keys(errors).length === 0) { // Only proceed if there are no errors
+      fetch(`http://localhost:4000/api/details/updateInfo/${detail._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify(editedDetail),
       })
-      .then((data) => {
-        console.log("Updated detail:", data);
-        setIsEditing(false);
-        setSuccessMessage("Detail updated successfully");
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 2000);
-      })
-      .catch((error) => {
-        console.error("Error updating detail:", error);
-        setErrorMessage("Error updating detail. Please try again later.");
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Updated detail:", data);
+          setSuccessMessage("Training edited successfully");
+          setGeneralError("");
+          setFieldErrors({});
+          setTimeout(() => {
+            setSuccessMessage("");
+            setIsEditing(false);
+          }, 2000);
+        })
+        .catch((error) => {
+          setGeneralError(error.message);
+          console.error("Error:", error.message);
+        });
+    } else {
+      setFieldErrors(errors);
+    }
   };
+  
 
   const handleCancel = () => {
     setIsEditing(false);
   };
 
   return (
-    <div className="mb-8 bg-gray-200 p-8 rounded  ">
-      <h2 className="text-xl font-semibold text-gray-800 font-serif pl-40 ml-6 mb-2">Detail</h2>
+    <div className="mt-4 mb-8 bg-gray-200 p-8 rounded">
+      {/* detail title */}
+      <div className="flex justify-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800 font-serif">
+          Detail
+        </h2>
+      </div>
       {isEditing ? (
-        <form className="flex flex-col mb-2">
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700 font-mono">Employee ID:</strong>
-            <input
-              type="text"
-              name="EmployeeId"
-              value={editedDetail.EmployeeId}
-              onChange={handleInputChange}
-              disabled
-              className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700 font-mono">Name:</strong>
-            <input
-              type="text"
-              name="Name"
-              value={editedDetail.Name}
-              onChange={handleInputChange}
-              className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700 font-mono">Designation:</strong>
-            <select
-              name="Designation"
-              value={editedDetail.Designation}
-              onChange={handleInputChange}
-              className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            >
-              <option value="">Select Designation</option>
-              <option value="Manager">Manager</option>
-              <option value="Executive">Executive</option>
-            </select>
-          </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700 font-mono">Division:</strong>
-            <select
-              name="Division"
-              value={editedDetail.Division}
-              onChange={handleInputChange}
-              className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            >
-              <option value="">Select Division</option>
-              <option value="Air Navigation Service">Air Navigation Service</option>
-              <option value="Airport Management">Airport Management</option>
-              <option value="Airport Emergency and Security">Airport Emergency and Security</option>
-              <option value="Aerodrome Planning and Maintenance">Aerodrome Planning and Maintenance</option>
-            </select>
-          </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700 font-mono">Section:</strong>
-            <select
-              name="Section"
-              value={editedDetail.Section}
-              onChange={handleInputChange}
-              className="text-gray-800 ml-4 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
-            >
-              <option value="">Select Section</option>
-              <option value="Air Traffic Control">Air Traffic Control</option>
-              <option value="CNS">CNS</option>
-              <option value="Aviation Security">Aviation Security</option>
-              <option value="Airport Emergency">Airport Emergency</option>
-              <option value="Bumthang Airport Management">Bumthang Airport Management</option>
-              <option value="Yonphula Airport Management">Yonphula Airport Management</option>
-              <option value="Gelephu Airport Management">Gelephu Airport Management</option>
-              <option value="Paro Airport Management">Paro Airport Management</option>
-            </select>
-          </div>
-          <div className="mt-2">
+        // edit basic info form
+        <form className="flex flex-col">
+          {generalError && <p className="text-red-500 mb-2">{generalError}</p>}
+          {successMessage && (
+            <p className="text-green-500 mb-2">{successMessage}</p>
+          )}
+          <table className="w-full">
+            <tbody>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Employee Id:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  <input
+                    type="text"
+                    name="EmployeeId"
+                    value={editedDetail.EmployeeId}
+                    onChange={handleInputChange}
+                    disabled
+                    className="w-11/12 ml-2 text-gray-800 border border-gray-300 px-2 py-1 rounded focus:outline-none focus:border-blue-500"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Name:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  <input
+                    type="text"
+                    name="Name"
+                    value={editedDetail.Name}
+                    onChange={handleInputChange}
+                    className={`w-11/12 ml-2 text-gray-800 border ${
+                      fieldErrors.Name ? "border-red-500" : "border-gray-300"
+                    } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                  />
+                  {fieldErrors.Name && (
+                    <p className="text-red-500 mb-2">{fieldErrors.Name}</p>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Designation:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                <input
+                    type="text"
+                    name="Designation"
+                    value={editedDetail.Designation}
+                    onChange={handleInputChange}
+                    className={`w-11/12 ml-2 text-gray-800 border ${
+                      fieldErrors.Designation ? "border-red-500" : "border-gray-300"
+                    } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                  />
+                  {fieldErrors.Designation && (
+                    <p className="text-red-500 mb-2">{fieldErrors.Designation}</p>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Division:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  <select
+                    name="Division"
+                    value={editedDetail.Division}
+                    onChange={handleInputChange}
+                    className={`w-11/12 ml-2 text-gray-800 border ${
+                      fieldErrors.Division? "border-red-500" : "border-gray-300"
+                    } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                  >
+                    <option value="">Select Division</option>
+                    <option value="Air Navigation Service">
+                      Air Navigation Service
+                    </option>
+                    <option value="Airport Management">
+                      Airport Management
+                    </option>
+                    <option value="Airport Emergency and Security">
+                      Airport Emergency and Security
+                    </option>
+                    <option value="Aerodrome Planning and Maintenance">
+                      Aerodrome Planning and Maintenance
+                    </option>
+                  </select>
+                  {fieldErrors.Division && (
+                    <p className="text-red-500 mb-2">{fieldErrors.Division}</p>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Section:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  <select
+                    name="Section"
+                    value={editedDetail.Section}
+                    onChange={handleInputChange}
+                    className={`w-11/12 ml-2 text-gray-800 border ${
+                      fieldErrors.Section ? "border-red-500" : "border-gray-300"
+                    } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                  >
+                    <option value="">Select Section</option>
+                    <option value="Air Traffic Control">
+                      Air Traffic Control
+                    </option>
+                    <option value="CNS">CNS</option>
+                    <option value="Aviation Security">Aviation Security</option>
+                    <option value="Airport Emergency">Airport Emergency</option>
+                    <option value="Bumthang Airport Management">
+                      Bumthang Airport Management
+                    </option>
+                    <option value="Yonphula Airport Management">
+                      Yonphula Airport Management
+                    </option>
+                    <option value="Gelephu Airport Management">
+                      Gelephu Airport Management
+                    </option>
+                    <option value="Paro Airport Management">
+                      Paro Airport Management
+                    </option>
+                  </select>
+                  {fieldErrors.Section && (
+                    <p className="text-red-500 mb-2">{fieldErrors.Section}</p>
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="flex justify-end mt-4">
             <button
               type="button"
               onClick={handleSave}
@@ -146,37 +237,74 @@ const BasicInfoSection = ({ detail }) => {
           </div>
         </form>
       ) : (
-        <div className="flex flex-col mb-2 overflow-auto">
-           <div className="flex justify-between mb-1 ">
-            <strong className="text-gray-700  font-semibold font-mono">Employee ID:</strong>
-            <p className="text-gray-700 font-semibold font-mono ml-2 mr-8">{detail.EmployeeId}</p>
+        // display basic info
+        <div className="flex flex-col overflow-auto">
+          <table className="w-full">
+            <tbody>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Employee ID:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-semibold font-mono">
+                  {detail.EmployeeId}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Name:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  {detail.Name}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Designation:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  {detail.Designation}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Division:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  {detail.Division}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-3/10 text-gray-700 font-mono">
+                  <strong>Section:</strong>
+                </td>
+                <td className="w-7/10 text-gray-700 font-mono">
+                  {detail.Section}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          {/* edit button */}
+          <div className="flex justify-end mt-4">
+            {user.email !== "kwangchuk@doat.gov.bt" &&
+              user.email !== "sangay@doat.gov.bt" &&
+              user.email !== "tgyelten@doat.gov.bt" &&
+              user.email !== "nrinchen@doat.gov.bt" &&
+              user.email !== "tdukpa@doat.gov.bt" && (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="text-blue-600 hover:text-blue-800 focus:outline-none border rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-blue-300"
+                  title="Edit Training"
+                >
+                  <img
+                    src={editinfo}
+                    alt="Edit Basic Info"
+                    className="w-6 h-6"
+                  />
+                </button>
+              )}
           </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700  font-semibold font-mono">Name:</strong>
-            <p className="text-gray-700 font-mono ml-2 mr-4">{detail.Name}</p>
-          </div>
-          <div className="flex justify-between">
-            <strong className="text-gray-700  font-semibold font-mono">Designation:</strong>
-            <p className="text-gray-700  font-mono ml-2 mr-4">{detail.Designation}</p>
-          </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700  font-semibold font-mono">Division:</strong>
-            <p className="text-gray-700   font-mono ml-2 mr-4">{detail.Division}</p>
-          </div>
-          <div className="flex justify-between mb-1">
-            <strong className="text-gray-700  font-semibold font-mono">Section:</strong>
-            <p className="text-gray-700 font-mono ml-2 mr-4">{detail.Section}</p>
-          </div>
-          {user.email!== 'kwangchuk@doat.gov.bt' && user.email!== 'sangay@doat.gov.bt' && user.email!== 'tgyelten@doat.gov.bt' &&  user.email!== 'nrinchen@doat.gov.bt' && user.email!== 'tdukpa@doat.gov.bt' &&(<button
-            onClick={() => setIsEditing(true)}
-            className="text-blue-600 hover:text-blue-800 focus:outline-none border border-blue-600 rounded px-2 py-1 mt-2 transition duration-300 ease-in-out hover:bg-blue-200"
-          >
-            Edit
-          </button>)}
         </div>
       )}
-      {errorMessage && <p className="text-red-500 mb-2">{errorMessage}</p>}
-      {successMessage && <p className="text-green-500 mb-2">{successMessage}</p>}
     </div>
   );
 };

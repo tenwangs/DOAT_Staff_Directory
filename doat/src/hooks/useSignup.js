@@ -18,7 +18,7 @@ export const useSignup = () => {
     const json = await response.json()
 
     
-    if(email !== 'kwangchuk@doat.gov.bt' && email !== 'sangay@doat.gov.bt' && email !== 'tgyelten@doat.gov.bt' && email !== 'nrinchen@doat.gov.bt'&& email !== 'tdukpa@doat.gov.bt' && email !== 'wangmo@doat.gov.bt' && email !== 'lamdon@doat.gov.bt' && email !== '02200165.cst@rub.edu.bt' ){
+    if(email !== 'kwangchuk@doat.gov.bt' && email !== 'sangay@doat.gov.bt' && email !== 'tgyelten@doat.gov.bt' && email !== 'nrinchen@doat.gov.bt'&& email !== 'tdukpa@doat.gov.bt' && email !== 'wangmo@doat.gov.bt' && email !== 'lamdon@doat.gov.bt' ){
      
       setTimeout(() => {
         window.location.reload()

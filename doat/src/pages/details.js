@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import BasicInfoSection from "../components/BasicInfoSection";
 import TrainingsSection from "../components/TrainingsSection";
 import { useAuthContext } from "../hooks/useAuthContext";
+import back from "../icons/icons8-return-50.png";
 
 const DetailPage = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const DetailPage = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`
+            Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({ trainingId }),
         }
@@ -100,9 +101,14 @@ const DetailPage = () => {
           <div className="flex justify-end mt-4 ">
             <Link
               to="/"
-              className="text-gray-600 hover:text-gray-800 focus:outline-none border border-gray-700 rounded px-3 py-1 transition duration-300 ease-in-out hover:bg-gray-300"
+              className="border border-gray-300 rounded px-3 py-1 transition duration-300 ease-in-out hover:bg-gray-300"
+              title="Back to List"
             >
-              Back to List
+              <img
+                src={back}
+                alt="Back to list"
+                className="w-6 h-6"
+              />
             </Link>
           </div>
         </div>
