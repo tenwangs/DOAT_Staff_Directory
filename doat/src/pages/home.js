@@ -153,7 +153,7 @@ function Home() {
           user.email !== "nrinchen@doat.gov.bt" &&
           user.email !== "tdukpa@doat.gov.bt" && (
             <button
-              className="bg-orange-700 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
+              className="bg-gray-600 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
               onClick={() => setShowModal(true)}
             >
               Add Employee

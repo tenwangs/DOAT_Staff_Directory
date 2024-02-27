@@ -94,12 +94,12 @@ const DetailsTable = () => {
         />
       </div>
       
-      <div className="overflow-auto h-screen">
+      <div className="overflow-auto h-screen rounded">
         <table className="w-full divide-y divide-gray-200">
           <thead className="bg-gray-300 ">
             <tr>
               <th
-                className="px-6 pr-8 py-3 text-left text-l font-medium text-gray-700 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase tracking-wider cursor-pointer"
                 onClick={() => handleSort("EmployeeId")}
               >
                 Employee ID
