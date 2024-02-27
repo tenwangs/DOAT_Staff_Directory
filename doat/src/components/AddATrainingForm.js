@@ -77,13 +77,15 @@ const AddATrainingForm = ({ onCancel }) => {
         newTraining.reportFile &&
         !allowedFileTypesReport.includes(newTraining.reportFile.type)
       ) {
-        errors.reportFile = "Invalid file type for reportFile (supported file types: jpg, jpeg, png, pdf, doc, docx, xls, xlsx)";
+        errors.reportFile =
+          "Invalid file type for reportFile (supported file types: jpg, jpeg, png, pdf, doc, docx, xls, xlsx)";
       }
       if (
         newTraining.certificate &&
         !allowedFileTypesCertificate.includes(newTraining.certificate.type)
       ) {
-        errors.certificate = "Invalid file type for certificate (supported file types: jpg, jpeg, png, pdf, doc, docx)";
+        errors.certificate =
+          "Invalid file type for certificate (supported file types: jpg, jpeg, png, pdf, doc, docx)";
       }
 
       if (Object.keys(errors).length > 0) {
@@ -129,6 +131,7 @@ const AddATrainingForm = ({ onCancel }) => {
       setGeneralError("");
       setFieldErrors({});
       setTimeout(() => {
+        setSuccessMessage("")
         onCancel();
       }, 2000);
     } catch (error) {
@@ -141,104 +144,146 @@ const AddATrainingForm = ({ onCancel }) => {
 
   return (
     <div className="mb-4 border rounded p-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">Add Training</h3>
-      {generalError && (
-        <p className="text-red-500 mb-2">{generalError}</p>
-      )}
-      {successMessage && (
-        <p className="text-green-500 mb-2">{successMessage}</p>
-      )}
+      <div className="flex justify-center">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2 font-mono">
+          Add Training
+        </h3>
+      </div>
+      {/* add training form */}
       <form className="flex flex-col ">
-        <input
-          type="text"
-          name="Title"
-          value={newTraining.Title}
-          onChange={handleInputChange}
-          placeholder="Title"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.Title ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.Title && (
-          <p className="text-red-500 mb-2">{fieldErrors.Title}</p>
+        {generalError && <p className="text-red-500 mb-2">{generalError}</p>}
+        {successMessage && (
+          <p className="text-green-500 mb-2">{successMessage}</p>
         )}
-        <input
-          type="date"
-          name="StartDate"
-          value={newTraining.StartDate}
-          onChange={handleInputChange}
-          placeholder="Start Date"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.StartDate ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.StartDate && (
-          <p className="text-red-500 mb-2">{fieldErrors.StartDate}</p>
-        )}
-        <input
-          type="date"
-          name="EndDate"
-          value={newTraining.EndDate}
-          onChange={handleInputChange}
-          placeholder="End Date"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.EndDate ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.EndDate && (
-          <p className="text-red-500 mb-2">{fieldErrors.EndDate}</p>
-        )}
-        <input
-          type="text"
-          name="Country"
-          value={newTraining.Country}
-          onChange={handleInputChange}
-          placeholder="Country"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.Country ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.Country && (
-          <p className="text-red-500 mb-2">{fieldErrors.Country}</p>
-        )}
-        <input
-          type="text"
-          name="Funding"
-          value={newTraining.Funding}
-          onChange={handleInputChange}
-          placeholder="Funding"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.Funding ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.Funding && (
-          <p className="text-red-500 mb-2">{fieldErrors.Funding}</p>
-        )}
-        <input
-          type="file"
-          name="reportFile"
-          onChange={handleFileChange}
-          placeholder="reportFile"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.reportFile ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.reportFile && (
-          <p className="text-red-500 mb-2">{fieldErrors.reportFile}</p>
-        )}
-        <input
-          type="file"
-          name="certificate"
-          onChange={handleFileChange}
-          placeholder="certificate"
-          className={`text-gray-800 mb-2 border ${
-            fieldErrors.certificate ? "border-red-500" : "border-gray-300"
-          } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
-        />
-        {fieldErrors.certificate && (
-          <p className="text-red-500 mb-2">{fieldErrors.certificate}</p>
-        )}
-        <div className="flex justify-end">
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="w-3/10 font-mono">Title:</td>
+              <td className="w-7/10">
+                <input
+                  type="text"
+                  name="Title"
+                  value={newTraining.Title}
+                  onChange={handleInputChange}
+                  className={`w-full text-gray-800 border ${
+                    fieldErrors.Title ? "border-red-500" : "border-gray-300"
+                  } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                />
+                {fieldErrors.Title && (
+                  <p className="text-red-500 mb-2">{fieldErrors.Title}</p>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="w-3/10 font-mono">Start Date:</td>
+              <td className="w-7/10">
+                <input
+                  type="date"
+                  name="StartDate"
+                  value={newTraining.StartDate}
+                  onChange={handleInputChange}
+                  placeholder="Start Date"
+                  className={`w-full text-gray-800 border ${
+                    fieldErrors.StartDate ? "border-red-500" : "border-gray-300"
+                  } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                />
+                {fieldErrors.StartDate && (
+                  <p className="text-red-500 mb-2">{fieldErrors.StartDate}</p>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="w-3/10 font-mono">End Date:</td>
+              <td className="w-7/10">
+                <input
+                  type="date"
+                  name="EndDate"
+                  value={newTraining.EndDate}
+                  onChange={handleInputChange}
+                  className={`w-full text-gray-800 border ${
+                    fieldErrors.EndDate ? "border-red-500" : "border-gray-300"
+                  } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                />
+                {fieldErrors.EndDate && (
+                  <p className="text-red-500 mb-2">{fieldErrors.EndDate}</p>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="w-3/10 font-mono">Country:</td>
+              <td className="w-7/10">
+                <input
+                  type="text"
+                  name="Country"
+                  value={newTraining.Country}
+                  onChange={handleInputChange}
+                  className={`w-full text-gray-800 border ${
+                    fieldErrors.Country ? "border-red-500" : "border-gray-300"
+                  } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                />
+                {fieldErrors.Country && (
+                  <p className="text-red-500 mb-2">{fieldErrors.Country}</p>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="w-3/10 font-mono">Funding:</td>
+              <td className="w-7/10">
+                <input
+                  type="text"
+                  name="Funding"
+                  value={newTraining.Funding}
+                  onChange={handleInputChange}
+                  className={`w-full text-gray-800 border ${
+                    fieldErrors.Funding ? "border-red-500" : "border-gray-300"
+                  } px-2 py-1 rounded focus:outline-none focus:border-blue-500`}
+                />
+                {fieldErrors.Funding && (
+                  <p className="text-red-500 mb-2">{fieldErrors.Funding}</p>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="w-3/10 font-mono">Report File:</td>
+              <td className="w-7/10">
+                <input
+                  type="file"
+                  name="reportFile"
+                  onChange={handleFileChange}
+                  className={`relative m-0 block w-full flex-auto rounded border bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200
+                     ${
+                       fieldErrors.reportFile
+                         ? "border-red-500"
+                         : "border-gray-300"
+                     }`}
+                />
+                {fieldErrors.reportFile && (
+                  <p className="text-red-500 mb-2">{fieldErrors.reportFile}</p>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <td className="w-3/10 font-mono">Certificate:</td>
+              <td className="w-7/10">
+                <input
+                  type="file"
+                  name="certificate"
+                  onChange={handleFileChange}
+                  className={`relative m-0 block w-full flex-auto rounded border bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200
+                     ${
+                       fieldErrors.certificate
+                         ? "border-red-500"
+                         : "border-gray-300"
+                     }`}
+                />
+                {fieldErrors.certificate && (
+                  <p className="text-red-500 mb-2">{fieldErrors.certificate}</p>
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="flex justify-end mt-4">
           <button
             type="button"
             onClick={handleSave}
