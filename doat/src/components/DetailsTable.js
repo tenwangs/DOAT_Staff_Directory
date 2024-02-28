@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
 import useSortable from "./useSortable";
 import { useAuthContext } from "../hooks/useAuthContext";
+import trash from "../icons/icons8-trash-can-50.png";
+import eye from "../icons/icons8-eye-50.png";
 
 const DetailsTable = () => {
   const [details, setDetails] = useState([]);
@@ -167,9 +168,10 @@ const DetailsTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-left">
                   <Link
                     to={`/${detail._id}`}
-                    className="text-green-700 p-2 text-sm font-semibold rounded-full transition-colors duration-200 ease-in-out hover:bg-green-500 hover:text-white focus:outline-none mr-2"
+                    className=" p-2 pl-4 pr-4  rounded transition-colors duration-200 ease-in-out hover:bg-green-500 hover:text-white focus:outline-none mr-2"
+                    title="View Detail"
                   >
-                    View
+                  View
                   </Link>
                   {user.email !== "kwangchuk@doat.gov.bt" &&
                     user.email !== "sangay@doat.gov.bt" &&
@@ -177,14 +179,11 @@ const DetailsTable = () => {
                     user.email !== "nrinchen@doat.gov.bt" &&
                     user.email !== "tdukpa@doat.gov.bt" && (
                       <button
-                        className=" p-2 pl-4 pr-4 text-sm font-semibold rounded-full transition-colors duration-200 ease-in-out hover:bg-red-500 hover:text-white focus:outline-none mr-2"
+                        className=" p-2 pl-4 pr-4  rounded transition-colors duration-200 ease-in-out hover:bg-red-300 hover:text-white focus:outline-none mr-2"
                         onClick={() => setDeleteId(detail._id)}
                         title="Delete Item"
                       >
-                        <FaTrash className="inline-block " />
-                        <span className="absolute top-full left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-l px-2 py-1 rounded-md opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out group-hover:opacity-100">
-                          Delete
-                        </span>
+                        <img src={trash} alt="Delete Employee" className="w-6 h-6"/>
                       </button>
                     )}
                 </td>

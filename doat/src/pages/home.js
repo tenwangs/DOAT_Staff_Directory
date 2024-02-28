@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import Select from "react-select";
 import DetailsTable from "../components/DetailsTable";
 import { useAuthContext } from "../hooks/useAuthContext";
+import add from "../icons/icons8-add-user-male-50.png";
 
 function Home() {
   const [showModal, setShowModal] = useState(false);
   const [employeeId, setEmployeeId] = useState("");
   const [name, setName] = useState("");
-  const [designation, setDesignation] = useState(null);
+  const [designation, setDesignation] = useState("");
   const [division, setDivision] = useState(null);
   const [section, setSection] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -15,11 +16,6 @@ function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const { user } = useAuthContext();
-
-  const designations = [
-    { value: "Manager", label: "Manager" },
-    { value: "Executive", label: "Executive" },
-  ];
 
   const divisions = [
     { value: "Air Navigation Service", label: "Air Navigation Service" },
@@ -78,7 +74,7 @@ function Home() {
     if (!name.trim()) {
       errors = { ...errors, name: "Name is required" };
     }
-    if (!designation) {
+    if (!designation.trim()) {
       errors = { ...errors, designation: "Designation is required" };
     }
     if (!division) {
@@ -102,7 +98,7 @@ function Home() {
     const data = {
       EmployeeId: employeeId,
       Name: name,
-      Designation: designation ? designation.value : "",
+      Designation: designation,
       Division: division ? division.value : "",
       Section: section ? section.value : "",
     };
@@ -129,7 +125,7 @@ function Home() {
       } else {
         setEmployeeId("");
         setName("");
-        setDesignation(null);
+        setDesignation("");
         setDivision(null);
         setSection(null);
         setSuccessMessage("Employee detail added successfully");
@@ -153,10 +149,11 @@ function Home() {
           user.email !== "nrinchen@doat.gov.bt" &&
           user.email !== "tdukpa@doat.gov.bt" && (
             <button
-              className="bg-gray-600 hover:bg-green-700 font-sans text-white pr-8 pl-8 text-center font-bold py-2 px-4 rounded mt-4 transform transition duration-500 ease-in-out hover:scale-105 active:scale-95"
+            className="text-green-600 hover:text-green-800 focus:outline-none border rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-green-300"
+            title="Add Employee"
               onClick={() => setShowModal(true)}
             >
-              Add Employee
+              <img src={add} alt="add" className="w-10 h-10" />
             </button>
           )}
       </div>
@@ -218,15 +215,14 @@ function Home() {
               {fieldErrors.name && (
                 <p className="text-red-500 mb-2">{fieldErrors.name}</p>
               )}
-              <Select
-                options={designations}
-                styles={customStyles}
-                className={`mb-4 ${
-                  fieldErrors.designation ? "border-red-500" : ""
-                }`}
+              <input
+                type="text"
                 placeholder="Designation"
+                className={`border p-2 w-full mb-4 ${
+                  fieldErrors.Designation ? "border-red-500" : ""
+                }`}
                 value={designation}
-                onChange={setDesignation}
+                onChange={(e) => setDesignation(e.target.value)}
               />
               {fieldErrors.designation && (
                 <p className="text-red-500 mb-2">{fieldErrors.designation}</p>
