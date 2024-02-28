@@ -271,10 +271,10 @@ const TrainingsSection = ({ detail, handleDeleteTraining }) => {
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                  className="px-3 py-1 border border-gray-200 rounded focus:outline-none focus:border-gray-400"
                 />
                 <button
-                  className="absolute right-0 top-0 bottom-0 px-2 bg-gray-200 rounded-r focus:outline-none "
+                  className="absolute right-0 top-0 bottom-0 px-2 bg-gray-200 rounded-r focus:outline-none hover:bg-gray-400 "
                   onClick={handleClearSearch}
                 >
                   <img src={close} alt="close" className="w-5 h-5" />

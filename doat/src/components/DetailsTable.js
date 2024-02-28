@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import useSortable from "./useSortable";
 import { useAuthContext } from "../hooks/useAuthContext";
 import trash from "../icons/icons8-trash-can-50.png";
-import eye from "../icons/icons8-eye-50.png";
 
 const DetailsTable = () => {
   const [details, setDetails] = useState([]);
@@ -53,14 +52,16 @@ const DetailsTable = () => {
   const sortedDetails = sortDetails(details);
 
   const filteredDetails = sortedDetails.filter((detail) => {
-    const { EmployeeId, Name, Designation, Division, Section } = detail;
+    const { EmployeeId, Name, Designation, Division, Section, Trainings } = detail;
     const query = searchQuery.toLowerCase();
+    const trainingTitles = Trainings.map(training => training.Title.toLowerCase());
     return (
       EmployeeId.toLowerCase().includes(query) ||
       Name.toLowerCase().includes(query) ||
       Designation.toLowerCase().includes(query) ||
       Division.toLowerCase().includes(query) ||
-      Section.toLowerCase().includes(query)
+      Section.toLowerCase().includes(query) ||
+      trainingTitles.some(title => title.includes(query))
     );
   });
 
@@ -84,23 +85,24 @@ const DetailsTable = () => {
   };
 
   return (
-    <div className=" mt-8 ">
+    <div className="w-full h-full flex flex-col items-start justify-start p-4">
+      {/* search bar */}
       <div className="pb-4">
         <input
           type="text"
           placeholder="Search..."
-          className="border p-2 w-2/6 mb-4 pl-4 bg-gray-200 rounded border-gray-800 hover:bg-gray-100 focus:outline-none focus:border-gray-500 transition-colors duration-200 ease-in-out"
+          className="border p-2 bg-gray-100 mb-4 pl-4 rounded border-gray-300 hover:bg-gray-300 focus:outline-none focus:border-gray-500 transition-colors duration-200 ease-in-out"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      
-      <div className="overflow-auto h-screen rounded">
-        <table className="w-full divide-y divide-gray-200">
-          <thead className="bg-gray-300 ">
+      {/* details list */}
+      <div className="w-full h-full overflow-auto rounded border border-gray-300">
+        <table className="w-full divide-y divide-gray-200 p-5">
+          <thead className="bg-gray-400 sticky top-0 z-10">
             <tr>
               <th
-                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap"
                 onClick={() => handleSort("EmployeeId")}
               >
                 Employee ID
@@ -109,7 +111,7 @@ const DetailsTable = () => {
                 )}
               </th>
               <th
-                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap"
                 onClick={() => handleSort("Name")}
               >
                 Name
@@ -118,7 +120,7 @@ const DetailsTable = () => {
                 )}
               </th>
               <th
-                className="px-6 py-3 pr-8 text-left text-sm font-medium text-gray-700 uppercase font-serif font-semibold tracking-wider cursor-pointer"
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap"
                 onClick={() => handleSort("Designation")}
               >
                 Designation
@@ -127,7 +129,7 @@ const DetailsTable = () => {
                 )}
               </th>
               <th
-                className="px-6 py-3 text-left text-sm font-medium text-gray-700 font-serif font-semibold uppercase tracking-wider cursor-pointer hidden lg:table-cell"
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap"
                 onClick={() => handleSort("Division")}
               >
                 Division
@@ -136,7 +138,7 @@ const DetailsTable = () => {
                 )}
               </th>
               <th
-                className="px-6 py-3 text-left text-sm font-medium text-gray-700 uppercase tracking-wider font-serif font-semibold cursor-pointer hidden lg:table-cell"
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap"
                 onClick={() => handleSort("Section")}
               >
                 Section
@@ -144,7 +146,13 @@ const DetailsTable = () => {
                   <span>{sortDirection === "asc" ? " ↓" : " ↑"}</span>
                 )}
               </th>
-              <th className="px-6 py-3 text-left font-serif font-semibold text-sm font-medium text-gray-700 uppercase tracking-wider">
+              <th 
+                className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap"
+              >
+                Trainings
+              </th>
+              <th className="px-6 py-3 text-left pr-40 text-sm font-medium font-serif font-semibold text-gray-700 uppercase cursor-pointer whitespace-nowrap lg:sticky lg:right-0 lg:top-0 md:sticky md:right-0 md:top-0 bg-gray-400 z-10"
+              >
                 Action
               </th>
             </tr>
@@ -159,13 +167,16 @@ const DetailsTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   {detail.Designation}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                <td className="px-6 py-4 whitespace-nowrap">
                   {detail.Division}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell ">
+                <td className="px-6 py-4 whitespace-nowrap">
                   {detail.Section}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">
+                <td className="px-6 py-4">
+                {detail.Trainings.map(training => training.Title).join(", ")}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap bg-gray-200 z-5 hover:bg-gray-300 lg:sticky lg:right-0 md:sticky md:right-0">
                   <Link
                     to={`/${detail._id}`}
                     className=" p-2 pl-4 pr-4  rounded transition-colors duration-200 ease-in-out hover:bg-green-500 hover:text-white focus:outline-none mr-2"

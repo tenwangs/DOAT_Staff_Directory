@@ -141,16 +141,16 @@ function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start h-screen p-4 space-y-4">
-      <div className="pt-4">
+    <div className="flex flex-col items-center justify-start p-8 space-y-4 box-border max-w-screen">
+      <div className="pt-4 w-4/6 flex justify-end">
         {user.email !== "kwangchuk@doat.gov.bt" &&
           user.email !== "sangay@doat.gov.bt" &&
           user.email !== "tgyelten@doat.gov.bt" &&
           user.email !== "nrinchen@doat.gov.bt" &&
           user.email !== "tdukpa@doat.gov.bt" && (
             <button
-            className="text-green-600 hover:text-green-800 focus:outline-none border rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-green-300"
-            title="Add Employee"
+              className="text-green-600 hover:text-green-800 focus:outline-none border rounded px-2 py-1 transition duration-300 ease-in-out hover:bg-green-300"
+              title="Add Employee"
               onClick={() => setShowModal(true)}
             >
               <img src={add} alt="add" className="w-10 h-10" />
@@ -158,7 +158,7 @@ function Home() {
           )}
       </div>
       {showModal && (
-        <div className="fixed z-10 inset-0 overflow-y-auto flex items-center justify-center ">
+        <div className="fixed z-20 inset-0 overflow-y-auto flex items-center justify-center ">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
           <div className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl max-w-md w-full p-8">
             <button
@@ -266,10 +266,8 @@ function Home() {
           </div>
         </div>
       )}
-      <div>
-        <div className="mt-8">
-          <DetailsTable />
-        </div>
+      <div className="w-4/5 h-screen p-4 flex flex-col">
+        <DetailsTable />
       </div>
     </div>
   );

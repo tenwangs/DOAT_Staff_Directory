@@ -25,7 +25,7 @@ function Navbar() {
         <div className="pl-8">
           <img src={logo} alt="logo" className="h-24" />
         </div>
-        <div className="flex flex-col pb-2 text-gray-300 justify-center items-center">
+        <div className="flex flex-col pb-2 text-gray-300 justify-center items-center hidden md:block">
           <p className="font-bold text-xl pr-2 text-center">༄༅། ། གནམ་གྲུའི་སྐྱེལ་འདྲེན་ལས་ཁུངས། </p>
           <p className="font-semibold pt-1 font-arial text-center"> DEPARTMENT OF AIR TRANSPORT </p>
         </div>
